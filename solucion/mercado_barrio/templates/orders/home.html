@@ -1,0 +1,53 @@
+<!-- 
+  Página principal de la aplicación.
+  Traducción directa de home.php manteniendo la misma estructura y funcionalidad.
+-->
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<!-- Equivalente a: <h1 class="h">Módulo de Pedidos & Entregas (Starter)</h1> -->
+<h1 class="h">Módulo de Pedidos & Entregas (Starter)</h1>
+<p class="muted">Código base **sin patrones de diseño**. La tarea es refactorizar aplicando uno creacional, uno estructural y uno de comportamiento.</p>
+
+<!-- Equivalente a: <h2 class="hh">Productos</h2> -->
+<h2 class="hh">Productos</h2>
+<ul class="list">
+  <!-- Equivalente a: <?php foreach ($products as $p): ?> -->
+  {% for product in products %}
+    <li class="list-item">
+      <!-- Equivalente a: <strong><?= htmlspecialchars($p['name']) ?></strong> <span class="muted">(<?= (int)$p['weight_grams'] ?> g)</span> -->
+      <strong>{{ product.name }}</strong> 
+      <span class="muted">({{ product.weight_grams }} g)</span>
+    </li>
+  {% endfor %}
+</ul>
+
+<!-- Equivalente a: <h2 class="hh">Pedidos recientes</h2> -->
+<h2 class="hh">Pedidos recientes</h2>
+<!-- Equivalente a: <?php if (empty($recent)): ?> -->
+{% if not recent %}
+  <p class="muted">Aún no hay pedidos.</p>
+{% else %}
+  <ul class="list">
+    <!-- Equivalente a: <?php foreach ($recent as $o): ?> -->
+    {% for order in recent %}
+      <li class="list-item">
+        <!-- 
+          Equivalente a: 
+          <span>#<?= (int)$o['id'] ?> • <?= htmlspecialchars($o['customer_email']) ?> • 
+          <?= htmlspecialchars($o['priority']) ?> • peso <?= (int)$o['total_weight'] ?> g</span>
+        -->
+        <span>#{{ order.id }} • {{ order.customer_email }} • {{ order.priority }} • peso {{ order.total_weight }} g</span>
+        
+        <!-- Equivalente a: <a class="chip" href="?r=order/show&id=<?= (int)$o['id'] ?>">ver</a> -->
+        <a class="chip" href="{% url 'order_show' order.id %}">ver</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<!-- Equivalente a: <div class="actions mt"><a class="btn primary" href="?r=order/create">➕ Crear nuevo pedido</a></div> -->
+<div class="actions mt">
+  <a class="btn primary" href="{% url 'order_create' %}">➕ Crear nuevo pedido</a>
+</div>
+{% endblock %}

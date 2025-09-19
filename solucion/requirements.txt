@@ -1,0 +1,26 @@
+# Dependencias para el proyecto MercadoBarrio Django
+# Traducción de las dependencias PHP originales a sus equivalentes Python
+
+# Framework web principal - Equivalente a XAMPP/Apache para PHP
+Django>=4.2,<5.0
+
+# Conector PostgreSQL - Equivalente a MySQL/MySQLi en PHP
+psycopg2-binary>=2.9.0
+
+# Utilidades adicionales para desarrollo
+python-decouple>=3.6  # Manejo de variables de entorno (equivalente a config.php)
+
+# Desarrollo y testing (equivalente a herramientas de XAMPP)
+# Descomenta estas líneas para desarrollo:
+# django-debug-toolbar>=4.0  # Para debugging (equivalente a error_reporting en PHP)
+# pytest-django>=4.5        # Para testing unitario
+
+# Documentación de dependencias originales PHP traducidas:
+# 
+# PHP Original -> Python Equivalente:
+# - XAMPP (Apache + PHP + MySQL) -> Django + gunicorn + PostgreSQL
+# - MySQL/MySQLi -> psycopg2-binary (PostgreSQL)
+# - PHP Sessions -> Django sessions (built-in)
+# - PHP PDO -> Django ORM (built-in)
+# - PHP filter_var -> Django validators (built-in)
+# - PHP htmlspecialchars -> Django template autoescaping (built-in)

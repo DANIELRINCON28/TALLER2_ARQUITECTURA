@@ -1,0 +1,77 @@
+<!-- 
+  Página de detalle de pedido.
+  Traducción directa de order_show.php manteniendo la misma estructura y funcionalidad.
+-->
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<!-- Equivalente a: <?php if (!$order): ?> -->
+{% if not order %}
+  <p class="muted">Pedido no encontrado.</p>
+{% else %}
+  <!-- 
+    Equivalente a: 
+    <?php else: $o=$order['order']; ?>
+    <h1 class="h">Pedido #<?= (int)$o['id'] ?></h1>
+  -->
+  <h1 class="h">Pedido #{{ order.order.id }}</h1>
+  
+  <!-- 
+    Equivalente a: 
+    <p><strong>Cliente:</strong> <?= htmlspecialchars($o['customer_email']) ?> • 
+    <strong>Dirección:</strong> <?= htmlspecialchars($o['address']) ?></p>
+  -->
+  <p>
+    <strong>Cliente:</strong> {{ order.order.customer_email }} • 
+    <strong>Dirección:</strong> {{ order.order.address }}
+  </p>
+  
+  <!-- 
+    Equivalente a: 
+    <p><strong>Prioridad:</strong> <?= htmlspecialchars($o['priority']) ?> • 
+    <strong>Fragilidad:</strong> <?= htmlspecialchars($o['fragility']) ?> • 
+    <strong>Peso total:</strong> <?= (int)$o['total_weight'] ?> g</p>
+  -->
+  <p>
+    <strong>Prioridad:</strong> {{ order.order.priority }} • 
+    <strong>Fragilidad:</strong> {{ order.order.fragility }} • 
+    <strong>Peso total:</strong> {{ order.order.total_weight }} g
+  </p>
+
+  <!-- Equivalente a: <h2 class="hh">Items</h2> -->
+  <h2 class="hh">Items</h2>
+  <ul class="list">
+    <!-- 
+      Equivalente a: 
+      <?php foreach ($order['items'] as $it): ?>
+        <li class="list-item"><?= htmlspecialchars($it['name']) ?> × <?= (int)$it['quantity'] ?></li>
+      <?php endforeach; ?>
+    -->
+    {% for item in order.items %}
+      <li class="list-item">{{ item.product.name }} × {{ item.quantity }}</li>
+    {% endfor %}
+  </ul>
+
+  <!-- Equivalente a: <h2 class="hh">Envío</h2> -->
+  <h2 class="hh">Envío</h2>
+  <!-- Equivalente a: <?php if (!$shipment): ?> -->
+  {% if not shipment %}
+    <p class="muted">Envío no registrado.</p>
+  {% else %}
+    <!-- 
+      Equivalente a: 
+      <p><strong>Proveedor:</strong> <?= htmlspecialchars($shipment['provider']) ?> • 
+      <strong>Tracking:</strong> <?= htmlspecialchars($shipment['tracking_id']) ?> • 
+      <strong>Estado:</strong> <?= htmlspecialchars($shipment['status']) ?></p>
+    -->
+    <p>
+      <strong>Proveedor:</strong> {{ shipment.provider }} • 
+      <strong>Tracking:</strong> {{ shipment.tracking_id }} • 
+      <strong>Estado:</strong> {{ shipment.status }}
+    </p>
+  {% endif %}
+
+  <!-- Equivalente a: <p class="note">Revisa la tabla <code>notifications</code> para ver los "mensajes enviados" (simulados).</p> -->
+  <p class="note">Revisa la tabla <code>notifications</code> para ver los "mensajes enviados" (simulados).</p>
+{% endif %}
+{% endblock %}
