@@ -11,5 +11,5 @@ class OrdersConfig(AppConfig):
     Maneja la funcionalidad de pedidos equivalente a functions.php.
     """
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'orders'
+    name = 'mercado_barrio.orders'
     verbose_name = 'Sistema de Pedidos MercadoBarrio'
