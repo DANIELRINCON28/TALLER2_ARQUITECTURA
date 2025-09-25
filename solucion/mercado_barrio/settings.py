@@ -47,7 +47,7 @@ ROOT_URLCONF = 'mercado_barrio.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'mercado_barrio' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,7 +70,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mercado_barrio',  # Equivalente a DB_NAME = 'cine_patterns'
         'USER': 'postgres',        # Equivalente a DB_USER = 'root'
-        'PASSWORD': '12345',            # Equivalente a DB_PASS = ''
+        'PASSWORD': 'password',            # Equivalente a DB_PASS = ''
         'HOST': '127.0.0.1',      # Equivalente a DB_HOST = '127.0.0.1'
         'PORT': '5432',
         'OPTIONS': {
