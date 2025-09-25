@@ -6,8 +6,32 @@
 
 {% block content %}
 <!-- Equivalente a: <h1 class="h">Módulo de Pedidos & Entregas (Starter)</h1> -->
-<h1 class="h">Módulo de Pedidos & Entregas (Starter)</h1>
-<p class="muted">Código base **sin patrones de diseño**. La tarea es refactorizar aplicando uno creacional, uno estructural y uno de comportamiento.</p>
+<h1 class="h">🎯 Módulo de Pedidos & Entregas con Patrones de Diseño</h1>
+<p class="muted">Sistema <strong>refactorizado</strong> implementando patrones de diseño según las directrices del proyecto.</p>
+
+<!-- Nueva sección: Información de Patrones -->
+<div class="note" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+  <h2 style="color: white; margin-top: 0;">🔥 Patrones Implementados</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+    <div>
+      <h3>🔨 CREACIONAL: Builder</h3>
+      <p>Construcción compleja de pedidos con validaciones, cálculo de peso, generación de códigos y etiquetas de manejo.</p>
+    </div>
+    <div>
+      <h3>🔌 ESTRUCTURAL: Adapter</h3>
+      <p>Integración unificada con APIs heterogéneas de proveedores (MotoYA, EcoBike, PaqueteríaZ).</p>
+    </div>
+    <div>
+      <h3>📊 COMPORTAMENTAL: Strategy</h3>
+      <p>Selección inteligente de proveedores con 3 estrategias: Estándar, Ecológica y Optimizada por Costo.</p>
+    </div>
+    <div>
+      <h3>🔔 COMPORTAMENTAL: Observer</h3>
+      <p>Sistema de notificaciones automáticas multi-canal: Email, Webhook y SMS.</p>
+    </div>
+  </div>
+  <p style="margin-bottom: 0;"><strong>✨ Flujo completo:</strong> Al crear un pedido se ejecutan los 4 patrones automáticamente según las directrices.</p>
+</div>
 
 <!-- Equivalente a: <h2 class="hh">Productos</h2> -->
 <h2 class="hh">Productos</h2>
@@ -48,6 +72,17 @@
 
 <!-- Equivalente a: <div class="actions mt"><a class="btn primary" href="?r=order/create">➕ Crear nuevo pedido</a></div> -->
 <div class="actions mt">
-  <a class="btn primary" href="{% url 'order_create' %}">➕ Crear nuevo pedido</a>
+  <a class="btn primary" href="{% url 'order_create' %}" style="font-size: 1.2em; padding: 1rem 2rem;">
+    🚀 Crear nuevo pedido con patrones
+  </a>
+</div>
+
+<!-- Información adicional para desarrolladores -->
+<div class="note mt">
+  <h3>🛠️ Para Desarrolladores</h3>
+  <p><strong>Demostración completa:</strong> Al crear un pedido verás logs detallados en la consola del servidor mostrando cada patrón en acción.</p>
+  <p><strong>Código fuente:</strong> Revisa <code>orders/services.py</code> para ver la implementación completa de los patrones.</p>
+  <p><strong>Base de datos:</strong> Las notificaciones se guardan en la tabla <code>notifications</code> para auditoría.</p>
+  <p><strong>Extensibilidad:</strong> Fácil agregar nuevos proveedores (Adapter), estrategias (Strategy) u observadores (Observer).</p>
 </div>
 {% endblock %}
