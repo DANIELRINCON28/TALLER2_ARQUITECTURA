@@ -656,6 +656,24 @@ class ProviderSelector:
 # PATRÓN COMPORTAMENTAL: OBSERVER
 # ==========================================
 
+def truncate_message_for_db(message: str, max_length: int = 255) -> str:
+    """
+    Trunca un mensaje para que pueda ser almacenado en la base de datos.
+    
+    Args:
+        message: Mensaje original
+        max_length: Longitud máxima permitida (por defecto 255 caracteres)
+        
+    Returns:
+        Mensaje truncado si es necesario
+    """
+    if len(message) <= max_length:
+        return message
+    
+    # Truncar dejando espacio para "..."
+    truncated = message[:max_length - 3] + "..."
+    return truncated
+
 class OrderObserver(ABC):
     """
     Interfaz abstracta para observadores de cambios en pedidos.
@@ -699,11 +717,14 @@ class EmailNotificationObserver(OrderObserver):
         # Simular envío de email
         email_content = self._generate_email_content(order, event_type, message)
         
+        # Truncar mensaje para BD si es necesario
+        db_message = truncate_message_for_db(email_content)
+        
         # Persistir notificación en base de datos
         Notification.objects.create(
             order=order,
             channel='email',
-            message=email_content
+            message=db_message
         )
         
         # Log para demostración
@@ -748,11 +769,15 @@ class WebhookNotificationObserver(OrderObserver):
         """
         webhook_payload = self._generate_webhook_payload(order, event_type, message)
         
+        # Crear mensaje resumido para BD
+        db_message = f"Webhook a {self._webhook_url}: {event_type} para pedido #{order.id}"
+        db_message = truncate_message_for_db(db_message)
+        
         # Persistir notificación en base de datos
         Notification.objects.create(
             order=order,
             channel='webhook',
-            message=f"Webhook payload: {webhook_payload}"
+            message=db_message
         )
         
         # Log para demostración (en real sería una llamada HTTP)
@@ -795,11 +820,14 @@ class SMSNotificationObserver(OrderObserver):
         """
         sms_content = self._generate_sms_content(order, event_type, message)
         
+        # Truncar mensaje para BD si es necesario (SMS ya es corto, pero por precaución)
+        db_message = truncate_message_for_db(sms_content)
+        
         # Persistir notificación en base de datos
         Notification.objects.create(
             order=order,
             channel='sms',
-            message=sms_content
+            message=db_message
         )
         
         # Log para demostración
