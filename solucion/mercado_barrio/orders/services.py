@@ -1180,7 +1180,220 @@ def request_pickup_naive(provider: str, data: Dict[str, Any]) -> str:
     
     if provider == 'motoya':
         return f'MYA-{secrets.token_hex(3).upper()}'
-    elif provider == 'ecobike':
+    elif provider == 'ecobibe':
         return f'EBK-{secrets.token_hex(3).upper()}'
     else:
         return f'PAQ-{secrets.token_hex(3).upper()}'
+
+
+# ==========================================
+# SERVICIO PRINCIPAL CON PATRONES INTEGRADOS
+# ==========================================
+
+class OrderService:
+    """
+    Servicio principal que integra todos los patrones de diseño.
+    Proporciona una interfaz de alto nivel para la creación y gestión de pedidos.
+    """
+    
+    def __init__(self):
+        """Inicializa el servicio con configuración por defecto."""
+        self.notification_subject = OrderNotificationSubject()
+        
+    def create_order_with_patterns(
+        self,
+        customer_email: str,
+        address: str,
+        priority: str,
+        fragility: str,
+        items: Dict[str, int],
+        strategy: str = 'standard'
+    ) -> Dict[str, Any]:
+        """
+        Crea un pedido utilizando todos los patrones de diseño implementados.
+        
+        Args:
+            customer_email: Email del cliente
+            address: Dirección de entrega
+            priority: Prioridad del pedido ('normal' | 'express')
+            fragility: Nivel de fragilidad ('ninguna' | 'debil' | 'alta')
+            items: Items del pedido {product_id: quantity}
+            strategy: Estrategia de selección ('standard' | 'eco' | 'cost')
+            
+        Returns:
+            Diccionario con información del pedido creado y patrones utilizados
+        """
+        # Configurar observadores
+        self._setup_observers()
+        
+        # Crear pedido usando handle_create_order con patrones
+        input_data = {
+            'customer_email': customer_email,
+            'address': address,
+            'priority': priority,
+            'fragility': fragility,
+            'items': items
+        }
+        
+        order_id = handle_create_order(input_data, strategy)
+        
+        # Obtener información detallada del pedido creado
+        order_info = self._get_order_details(order_id)
+        
+        return {
+            'order_id': order_id,
+            'patterns_used': {
+                'builder': 'Construcción compleja del pedido con validaciones',
+                'strategy': order_info.get('strategy_used', 'Selección de proveedor'),
+                'adapter': f"Integración con {order_info.get('provider', 'proveedor')}",
+                'observer': f"Notificaciones a {len(self.notification_subject.get_observers_info())} canales"
+            },
+            'order_details': order_info
+        }
+    
+    def _setup_observers(self):
+        """Configura los observadores por defecto."""
+        # Limpiar observadores existentes
+        self.notification_subject = OrderNotificationSubject()
+        
+        # Agregar observadores estándar
+        email_observer = EmailNotificationObserver()
+        webhook_observer = WebhookNotificationObserver("https://api.external-system.com/webhook")
+        sms_observer = SMSNotificationObserver("+1234567890")
+        
+        self.notification_subject.attach_observer(email_observer)
+        self.notification_subject.attach_observer(webhook_observer)
+        self.notification_subject.attach_observer(sms_observer)
+    
+    def _get_order_details(self, order_id: int) -> Dict[str, Any]:
+        """Obtiene detalles completos del pedido."""
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            
+            return {
+                'order': order,
+                'shipment': shipment,
+                'provider': shipment.provider if shipment else None,
+                'tracking_id': shipment.tracking_id if shipment else None,
+                'strategy_used': 'Estrategia aplicada durante creación'
+            }
+        except Order.DoesNotExist:
+            return {}
+    
+    def simulate_status_change(self, order_id: int, new_status: str) -> List[str]:
+        """
+        Simula cambio de estado del pedido para demostrar patrón Observer.
+        
+        Args:
+            order_id: ID del pedido
+            new_status: Nuevo estado del pedido
+            
+        Returns:
+            Lista de canales notificados
+        """
+        try:
+            order = Order.objects.get(id=order_id)
+            
+            # Configurar observadores si no están configurados
+            if not self.notification_subject.get_observers_info():
+                self._setup_observers()
+            
+            # Generar mensaje según el estado
+            status_messages = {
+                'dispatched': 'Pedido empacado y listo para recogida',
+                'in_transit': 'Pedido en camino al destino',
+                'delivered': 'Pedido entregado exitosamente'
+            }
+            
+            message = status_messages.get(new_status, f'Estado cambiado a {new_status}')
+            event_type = new_status.upper()
+            
+            # Notificar observadores
+            self.notification_subject.notify_observers(order, event_type, message)
+            
+            return self.notification_subject.get_observers_info()
+            
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')
+    
+    def get_order_status(self, order_id: int) -> Dict[str, Any]:
+        """
+        Obtiene el estado actual del pedido.
+        
+        Args:
+            order_id: ID del pedido
+            
+        Returns:
+            Información del estado del pedido
+        """
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            notifications = Notification.objects.filter(order_id=order_id).count()
+            
+            return {
+                'order_id': order_id,
+                'customer_email': order.customer_email,
+                'priority': order.priority,
+                'status': shipment.status if shipment else 'PENDING',
+                'provider': shipment.provider if shipment else None,
+                'tracking_id': shipment.tracking_id if shipment else None,
+                'notifications_sent': notifications
+            }
+            
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')
+
+
+def get_order_processing_info(order_id: int) -> Dict[str, Any]:
+    """
+    Obtiene información detallada del procesamiento del pedido con patrones.
+    
+    Args:
+        order_id: ID del pedido
+        
+    Returns:
+        Información de patrones utilizados en el pedido
+    """
+    try:
+        order = Order.objects.get(id=order_id)
+        shipment = Shipment.objects.filter(order_id=order_id).first()
+        notifications = list(Notification.objects.filter(order_id=order_id))
+        
+        # Simular información de patrones (en implementación real se obtendría de logs/metadata)
+        return {
+            'builder_info': {
+                'pattern': 'Builder (Creacional)',
+                'description': 'Construcción compleja del pedido con validaciones',
+                'package_code': f'PKG-{order.id:08X}',  # Simular código generado
+                'weight_calculated': order.total_weight,
+                'fragility_handled': order.fragility != 'ninguna'
+            },
+            'strategy_info': {
+                'pattern': 'Strategy (Comportamental)',
+                'description': 'Selección inteligente de proveedor',
+                'provider_selected': shipment.provider if shipment else 'N/A',
+                'decision_factors': f'Peso: {order.total_weight}g, Prioridad: {order.priority}, Fragilidad: {order.fragility}'
+            },
+            'adapter_info': {
+                'pattern': 'Adapter (Estructural)',
+                'description': 'Integración unificada con APIs de proveedores',
+                'provider_integrated': shipment.provider if shipment else 'N/A',
+                'tracking_generated': shipment.tracking_id if shipment else 'N/A',
+                'unified_interface': True
+            },
+            'observer_info': {
+                'pattern': 'Observer (Comportamental)',
+                'description': 'Sistema de notificaciones multi-canal',
+                'notifications_sent': len(notifications),
+                'channels_used': list(set([n.channel for n in notifications])),
+                'auto_notification': True
+            }
+        }
+        
+    except Order.DoesNotExist:
+        return {
+            'error': f'Pedido #{order_id} no encontrado',
+            'patterns_info': None
+        }

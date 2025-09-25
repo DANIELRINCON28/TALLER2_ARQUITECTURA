@@ -55,6 +55,17 @@
       </select>
     </label>
   </div>
+
+  <!-- NUEVA SECCIÓN: Selección de Estrategia de Patrones -->
+  <div class="field mt">
+    <span>🎯 Estrategia de Selección de Proveedor</span>
+    <select name="strategy">
+      <option value="standard">📊 Estándar - Balance velocidad/costo</option>
+      <option value="eco">🌿 Ecológica - Menor impacto ambiental</option>
+      <option value="cost">💰 Optimizada por costo - Más económica</option>
+    </select>
+    <small class="muted">Selecciona qué patrón Strategy usar para elegir el proveedor de entrega</small>
+  </div>
   
   <!-- Equivalente a: <h2 class="hh mt">Items</h2> -->
   <h2 class="hh mt">Items</h2>
@@ -83,6 +94,15 @@
   </div>
 </form>
 
-<!-- Equivalente a: <p class="note">Este flujo tiene if/else y funciones directas. El objetivo es **refactorizarlo** aplicando patrones.</p> -->
-<p class="note">Este flujo tiene if/else y funciones directas. El objetivo es **refactorizarlo** aplicando patrones.</p>
+<!-- Información sobre patrones implementados -->
+<div class="note">
+  <h3>🎯 Patrones de Diseño Implementados:</h3>
+  <ul>
+    <li><strong>🔨 Builder (Creacional):</strong> Construcción compleja del pedido con validaciones</li>
+    <li><strong>🔌 Adapter (Estructural):</strong> Integración unificada con APIs de proveedores</li>
+    <li><strong>📊 Strategy (Comportamental):</strong> Selección inteligente de proveedores</li>
+    <li><strong>🔔 Observer (Comportamental):</strong> Sistema de notificaciones automáticas</li>
+  </ul>
+  <p><em>Al confirmar el pedido, se ejecutará el flujo completo con todos los patrones.</em></p>
+</div>
 {% endblock %}

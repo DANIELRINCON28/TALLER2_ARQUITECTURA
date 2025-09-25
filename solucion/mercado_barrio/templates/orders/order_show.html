@@ -71,7 +71,109 @@
     </p>
   {% endif %}
 
+  <!-- NUEVA SECCIÓN: Información de Patrones de Diseño -->
+  {% if patterns_info %}
+  <h2 class="hh">🎯 Patrones de Diseño Aplicados</h2>
+  
+  <!-- Patrón Builder -->
+  {% if patterns_info.builder_info %}
+  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #007bff;">
+    <h3>🔨 {{ patterns_info.builder_info.pattern }}</h3>
+    <p><strong>Descripción:</strong> {{ patterns_info.builder_info.description }}</p>
+    <ul>
+      <li><strong>Código paquete:</strong> {{ patterns_info.builder_info.package_code }}</li>
+      <li><strong>Peso calculado:</strong> {{ patterns_info.builder_info.weight_calculated }}g</li>
+      <li><strong>Fragilidad manejada:</strong> 
+        {% if patterns_info.builder_info.fragility_handled %}✅ Sí{% else %}❌ No{% endif %}
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Patrón Strategy -->
+  {% if patterns_info.strategy_info %}
+  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #28a745;">
+    <h3>📊 {{ patterns_info.strategy_info.pattern }}</h3>
+    <p><strong>Descripción:</strong> {{ patterns_info.strategy_info.description }}</p>
+    <ul>
+      <li><strong>Proveedor seleccionado:</strong> {{ patterns_info.strategy_info.provider_selected }}</li>
+      <li><strong>Factores de decisión:</strong> {{ patterns_info.strategy_info.decision_factors }}</li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Patrón Adapter -->
+  {% if patterns_info.adapter_info %}
+  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #ffc107;">
+    <h3>🔌 {{ patterns_info.adapter_info.pattern }}</h3>
+    <p><strong>Descripción:</strong> {{ patterns_info.adapter_info.description }}</p>
+    <ul>
+      <li><strong>Proveedor integrado:</strong> {{ patterns_info.adapter_info.provider_integrated }}</li>
+      <li><strong>Tracking generado:</strong> {{ patterns_info.adapter_info.tracking_generated }}</li>
+      <li><strong>Interfaz unificada:</strong> 
+        {% if patterns_info.adapter_info.unified_interface %}✅ Implementada{% else %}❌ No{% endif %}
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Patrón Observer -->
+  {% if patterns_info.observer_info %}
+  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #dc3545;">
+    <h3>🔔 {{ patterns_info.observer_info.pattern }}</h3>
+    <p><strong>Descripción:</strong> {{ patterns_info.observer_info.description }}</p>
+    <ul>
+      <li><strong>Notificaciones enviadas:</strong> {{ patterns_info.observer_info.notifications_sent }}</li>
+      <li><strong>Canales utilizados:</strong> 
+        {% for channel in patterns_info.observer_info.channels_used %}
+          <span class="chip">{{ channel }}</span>
+        {% endfor %}
+      </li>
+      <li><strong>Notificación automática:</strong> 
+        {% if patterns_info.observer_info.auto_notification %}✅ Activada{% else %}❌ Desactivada{% endif %}
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Botón para simular cambio de estado (Observer) -->
+  <div class="actions mt">
+    <button onclick="simulateStatusChange('dispatched')" class="btn">📦 Simular Despacho</button>
+    <button onclick="simulateStatusChange('in_transit')" class="btn">🚚 Simular En Tránsito</button>
+    <button onclick="simulateStatusChange('delivered')" class="btn primary">✅ Simular Entrega</button>
+  </div>
+
+  <script>
+    function simulateStatusChange(status) {
+      fetch(`/api/order/{{ order.order.id }}/status/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `status=${status}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(`✅ Estado cambiado a ${status}!\nNotificaciones enviadas: ${data.notifications_sent.length}\nPatrón usado: ${data.pattern_used}`);
+          location.reload();
+        } else {
+          alert('❌ Error al cambiar estado: ' + data.error);
+        }
+      })
+      .catch(error => {
+        alert('❌ Error de conexión: ' + error);
+      });
+    }
+  </script>
+  {% endif %}
+
   <!-- Equivalente a: <p class="note">Revisa la tabla <code>notifications</code> para ver los "mensajes enviados" (simulados).</p> -->
-  <p class="note">Revisa la tabla <code>notifications</code> para ver los "mensajes enviados" (simulados).</p>
+  <p class="note">
+    📊 Los patrones de diseño se ejecutan automáticamente al crear el pedido.<br>
+    🔍 Revisa la consola del servidor para ver los logs detallados de cada patrón.<br>
+    🔔 Usa los botones de arriba para simular cambios de estado con el patrón Observer.
+  </p>
 {% endif %}
 {% endblock %}
