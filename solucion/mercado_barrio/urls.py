@@ -8,5 +8,5 @@ from django.urls import path, include
 # Equivalente al switch/case para las rutas en index.php
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('orders.urls')),  # Incluye todas las rutas de la aplicación orders
+    path('', include('mercado_barrio.orders.urls')),  # Incluye todas las rutas de la aplicación orders
 ]

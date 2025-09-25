@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'orders',  # Aplicación principal equivalente a functions.php
+    'mercado_barrio.orders.apps.OrdersConfig',  # Aplicación principal equivalente a functions.php
 ]
 
 MIDDLEWARE = [
