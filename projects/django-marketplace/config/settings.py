@@ -1,13 +1,7 @@
-"""
-Configuración de Django para el proyecto mercado_barrio.
-Traducción directa de config.php manteniendo la misma funcionalidad.
-Migrado de MySQL a PostgreSQL según requerimientos.
-"""
 from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -29,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mercado_barrio.orders.apps.OrdersConfig',  # Aplicación principal equivalente a functions.php
+    'apps.core',  # Aplicación principal - antes: mercado_barrio.orders
 ]
 
 MIDDLEWARE = [
@@ -42,12 +36,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'mercado_barrio.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'mercado_barrio' / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # Actualizado a la nueva estructura
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,7 +54,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mercado_barrio.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database configuration
 # Traducción de la configuración MySQL a PostgreSQL
@@ -68,13 +62,13 @@ WSGI_APPLICATION = 'mercado_barrio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mercado_barrio',  # Equivalente a DB_NAME = 'cine_patterns'
-        'USER': 'postgres',        # Equivalente a DB_USER = 'root'
-        'PASSWORD': 'password',            # Equivalente a DB_PASS = ''
-        'HOST': '127.0.0.1',      # Equivalente a DB_HOST = '127.0.0.1'
+        'NAME': 'mercado_barrio', 
+        'USER': 'postgres',       
+        'PASSWORD': 'password',   
+        'HOST': '127.0.0.1',      
         'PORT': '5432',
         'OPTIONS': {
-            'client_encoding': 'UTF8',  # Equivalente a DB_CHARSET = 'utf8mb4'
+            'client_encoding': 'UTF8',
         },
     }
 }

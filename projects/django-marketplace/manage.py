@@ -11,7 +11,7 @@ if __name__ == '__main__':
     Punto de entrada principal de la aplicación Django.
     Reemplaza la funcionalidad del servidor web de XAMPP y el punto de entrada index.php.
     """
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mercado_barrio.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

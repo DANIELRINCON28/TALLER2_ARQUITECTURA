@@ -1,15 +1,15 @@
 """
-Configuración de la aplicación orders.
+Configuración de la aplicación core.
 Equivalente a la organización modular del proyecto PHP.
 """
 from django.apps import AppConfig
 
 
-class OrdersConfig(AppConfig):
+class CoreConfig(AppConfig):
     """
-    Configuración de la aplicación orders.
-    Maneja la funcionalidad de pedidos equivalente a functions.php.
+    Configuración de la aplicación core.
+    Maneja la funcionalidad principal equivalente a functions.php.
     """
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'mercado_barrio.orders'
+    name = 'apps.core'
     verbose_name = 'Sistema de Pedidos MercadoBarrio'

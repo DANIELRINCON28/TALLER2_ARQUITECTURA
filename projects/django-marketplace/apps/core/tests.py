@@ -5,8 +5,8 @@ Verificación de que toda la funcionalidad original está preservada.
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.messages import get_messages
-from orders.models import Product, Order, OrderItem, Shipment, Notification
-from orders.services import (
+from core.models import Product, Order, OrderItem, Shipment, Notification
+from core.services import (
     products_all, 
     orders_latest, 
     handle_create_order,

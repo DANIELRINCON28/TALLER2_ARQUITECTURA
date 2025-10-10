@@ -5,7 +5,7 @@ Uso: python manage.py poblar_datos
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from mercado_barrio.orders.models import Product, Order, OrderItem, Shipment, Notification
+from mercado_barrio.core.models import Product, Order, OrderItem, Shipment, Notification
 from django.utils import timezone
 from datetime import timedelta
 import random

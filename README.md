@@ -1,63 +1,111 @@
-﻿## TALLER2_ARQUITECTURA
+﻿# TALLER 2 - ARQUITECTURA DE SOFTWARE
 
-# 1) Contexto del caso
-La empresa MercadoBarrio es un marketplace que conecta tiendas de barrio con clientes de la ciudad. Están construyendo su plataforma web y móvil. El foco del sprint actual es el módulo de Pedidos & Entregas, que debe:
+## 📁 Estructura del Proyecto
 
-Tomar pedidos (carrito → checkout),
+Este repositorio contiene dos implementaciones del sistema MercadoBarrio siguiendo principios de arquitectura profesional:
 
-Preparar el despacho (armado del paquete),
+```
+TALLER2_ARQUITECTURA/
+│
+├── 📚 docs/                          # Documentación del proyecto
+│   └── Actividad.md                  # Especificaciones y requerimientos (renombrado)
+│
+├── 🚀 projects/                      # Proyectos implementados
+│   │
+│   ├── domi/                         # Implementación original (domi)
+│   │   ├── config.php                # ⚙️ Configuración principal
+│   │   ├── index.php                 # 🌐 Punto de entrada
+│   │   ├── README.md                 # � Documentación del ejercicio original
+│   │   ├── app/                      # 💼 Código de aplicación
+│   │   │   ├── db.php                # Conexión a base de datos
+│   │   │   └── functions.php         # Funciones y lógica de negocio
+│   │   ├── assets/                   # 🎨 Recursos estáticos
+│   │   │   └── css/
+│   │   │       └── style.css
+│   │   ├── db/                       # 🗄️ Scripts de base de datos
+│   │   │   ├── schema.sql
+│   │   │   └── seed.sql
+│   │   └── views/                    # 🎨 Vistas (plantillas PHP)
+│   │       ├── layout.php
+│   │       ├── home.php
+│   │       ├── order_create.php
+│   │       └── order_show.php
+│   │
+│   └── django-marketplace/           # Implementación Django (Python)
+│       ├── config/                   # ⚙️ Configuraciones del proyecto
+│       │   ├── __init__.py
+│       │   ├── settings.py           # Configuración de Django
+│       │   ├── urls.py               # Rutas principales
+│       │   └── wsgi.py               # WSGI application
+│       │
+│       ├── apps/                     # 💼 Aplicaciones Django
+│       │   ├── __init__.py
+│       │   └── core/                 # App principal
+│       │       ├── __init__.py
+│       │       ├── admin.py          # Configuración admin
+│       │       ├── apps.py           # Configuración app
+│       │       ├── models.py         # Modelos de datos
+│       │       ├── services.py       # Lógica de negocio
+│       │       ├── views.py          # Vistas/controladores
+│       │       ├── urls.py           # Rutas de la app
+│       │       ├── tests.py          # Tests unitarios
+│       │       ├── migrations/       # Migraciones de BD
+│       │       └── management/       # Comandos personalizados
+│       │           └── commands/
+│       │               └── poblar_datos.py
+│       │
+│       ├── templates/                # 🎨 Plantillas HTML
+│       │   └── orders/               # Vistas de pedidos
+│       │       ├── base.html
+│       │       ├── home.html
+│       │       ├── order_create.html
+│       │       └── order_show.html
+│       │
+│       ├── static/                   # 🌐 Archivos estáticos
+│       │   └── css/
+│       │       └── style.css
+│       │
+│       ├── manage.py                 # CLI de Django
+│       ├── requirements.txt          # Dependencias Python
+│       └── .gitignore
+│
+└── venv/                             # Entorno virtual Python (no versionado)
 
-Elegir un proveedor de entrega (moto, bicicleta, paquetería),
+```
 
-Notificar al cliente el estado del pedido (creado, despachado, en ruta, entregado).
+## 🎯 Organización por Responsabilidades
 
-# 2) Objetivo del ejercicio
-Cada equipo debe implementar una funcionalidad específica aplicando tres patrones (uno por familia).
-La elección del patrón es libre dentro de cada familia, justificando por qué ese patrón es el más adecuado.
+### ⚙️ Configuraciones (`config/`)
+- Archivos de configuración de base de datos
+- Settings de frameworks
+- Variables de entorno
+- Configuraciones de aplicación
 
-# 3) Funcionalidad a implementar (scope acotado)
-“Confirmación de Pedido y Orquestación de Entrega”
+### 💼 Lógica de Negocio (`src/` o `apps/`)
+- **Controllers**: Manejan peticiones HTTP y respuestas
+- **Models**: Definición de entidades y acceso a datos
+- **Services**: Lógica de negocio y reglas de aplicación
+- Patrones de diseño implementados
 
-Flujo resumido:
+### 🎨 Presentación (`templates/` o `views/`)
+- Plantillas HTML
+- Layouts y componentes visuales
+- Separación de la capa de presentación
 
-El cliente confirma el pedido (con items, dirección y medio de pago ya validados).
+### 🌐 Recursos Públicos (`public/` o `static/`)
+- Punto de entrada de la aplicación
+- CSS, JavaScript, imágenes
+- Assets accesibles desde el navegador
 
-El sistema construye un objeto Pedido listo para despachar (con reglas de empaquetado/fragilidad).
+### 🗄️ Base de Datos (`database/`)
+- Esquemas y migraciones
+- Scripts de inicialización
+- Datos de prueba (seeds)
 
-El sistema elige un proveedor de entrega apropiado (según ciudad, costo, tiempo, restricciones).
+### 📚 Documentación (`docs/`)
+- Especificaciones del proyecto
+- Requerimientos funcionales
+- Guías de implementación
 
-El sistema adapta o compone la integración con el proveedor externo (APIs heterogéneas) para solicitar el retiro.
+---
 
-El sistema notifica al cliente los cambios de estado (pedido confirmado → despachado → en ruta → entregado).
-
-Entregable técnico mínimo: endpoints/controlador o script ejecutable que dispare ese flujo con logs claros y salida visible (consola, JSON o web simple).
-
-# 4) Requisitos funcionales (de la funcionalidad)
-RF1. Confirmar pedido con: idCliente, items[] (sku, nombre, cantidad), direccionEntrega, prioridad (normal/express), fragilidad (ninguna/débil/alta).
-
-RF2. Construir un objeto Pedido listo para despacho, agregando:
-
-código de paquete, peso estimado, etiqueta de manejo (si frágil),
-
-fecha/hora de recogida estimada.
-
-RF3. Seleccionar proveedor de entrega entre: MotoYA, EcoBike, PaqueteríaZ con política:
-Dentro del radio urbano y pedido liviano → preferir MotoYA;
-
-Si prioridad express y frágil → priorizar EcoBike si disponible;
-
-Si fuera de rango o muy pesado → PaqueteríaZ.
-
-RF4. Integrar con el proveedor elegido para solicitar la recogida y obtener un trackingId.
-
-RF5. Registrar y notificar al cliente los estados: CONFIRMADO, DESPACHADO, EN_RUTA, ENTREGADO.
-
-RF6. Persistencia no obligatoria: se puede simular con in-memory o archivos.
-
-Requisitos no funcionales
-
-RNF1. Código modular y legible, con bajo acoplamiento y alta cohesión.
-
-RNF2. Facilitar sustitución de proveedores sin romper el flujo (OCP/DIP).
-
-RNF3. Trazabilidad por logs (identificar patrón usado y decisiones).
