@@ -1,0 +1,80 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<h1 class="h">Confirmación de Pedido</h1>
+
+<form method="post" action="{% url 'order_create' %}" class="form">
+  {% csrf_token %}
+  <input type="hidden" name="__action" value="order.store">
+  
+  <div class="grid2">
+   
+    <label class="field">
+      <span>Email del cliente</span>
+      <input type="email" name="customer_email" required>
+    </label>
+    
+   
+    <label class="field">
+      <span>Dirección de entrega</span>
+      <input type="text" name="address" required>
+    </label>
+  </div>
+  
+  <div class="grid2">
+  
+    <label class="field">
+      <span>Prioridad</span>
+      <select name="priority">
+        <option value="normal">Normal</option>
+        <option value="express">Express</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Fragilidad</span>
+      <select name="fragility">
+        {% for option in fragility_options %}
+          <option value="{{ option }}">{{ option|title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div class="field mt">
+    <span>Estrategia de Selección de Proveedor</span>
+    <select name="strategy">
+      <option value="standard">📊 Estándar - Balance velocidad/costo</option>
+      <option value="eco">🌿 Ecológica - Menor impacto ambiental</option>
+      <option value="cost">💰 Optimizada por costo - Más económica</option>
+    </select>
+    <small class="muted">Selecciona qué patrón Strategy usar para elegir el proveedor de entrega</small>
+  </div>
+  
+  <h2 class="hh mt">Items</h2>
+  <p class="muted">Selecciona cantidades (0 para omitir).</p>
+  
+  {% for product in products %}
+    <label class="field-inline">
+      <span>{{ product.name }} ({{ product.weight_grams }} g)</span>
+      <input class="qty" type="number" name="items[{{ product.id }}]" min="0" max="20" value="0">
+    </label>
+  {% endfor %}
+  
+  <div class="actions mt">
+    <button class="btn primary">Confirmar y despachar</button>
+    <a class="btn" href="{% url 'home' %}">Cancelar</a>
+  </div>
+</form>
+
+<div class="note">
+  <h3> Patrones de Diseño Implementados:</h3>
+  <ul>
+    <li><strong>🔨 Builder (Creacional):</strong> Construcción compleja del pedido con validaciones</li>
+    <li><strong>🔌 Adapter (Estructural):</strong> Integración unificada con APIs de proveedores</li>
+    <li><strong>📊 Strategy (Comportamental):</strong> Selección inteligente de proveedores</li>
+    <li><strong>🔔 Observer (Comportamental):</strong> Sistema de notificaciones automáticas</li>
+  </ul>
+  <p><em>Al confirmar el pedido, se ejecutará el flujo completo con todos los patrones.</em></p>
+</div>
+{% endblock %}

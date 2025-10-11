@@ -1,0 +1,62 @@
+{% extends 'orders/base.html' %}
+
+{% block content %}
+<h1 class="h">Modulo de Pedidos y Entregas</h1>
+<p class="muted">Sistema implementando patrones de diseño.</p>
+
+<div class="note">
+  <h2>Patrones Implementados</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+    <div>
+      <h3>CREACIONAL: Builder</h3>
+      <p>Construccion compleja de pedidos con validaciones.</p>
+    </div>
+    <div>
+      <h3>ESTRUCTURAL: Adapter</h3>
+      <p>Integracion unificada con APIs de proveedores.</p>
+    </div>
+    <div>
+      <h3>COMPORTAMENTAL: Strategy</h3>
+      <p>Seleccion inteligente de proveedores.</p>
+    </div>
+    <div>
+      <h3>COMPORTAMENTAL: Observer</h3>
+      <p>Sistema de notificaciones automaticas.</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="hh">Productos</h2>
+<ul class="list">
+  {% for product in products %}
+    <li class="list-item">
+      <strong>{{ product.name }}</strong> 
+      <span class="muted">({{ product.weight_grams }} g)</span>
+    </li>
+  {% endfor %}
+</ul>
+
+<h2 class="hh">Pedidos recientes</h2>
+{% if not recent %}
+  <p class="muted">Aun no hay pedidos.</p>
+{% else %}
+  <ul class="list">
+    {% for order in recent %}
+      <li class="list-item">
+        <span>#{{ order.id }} - {{ order.customer_email }} - {{ order.priority }} - peso {{ order.total_weight }} g</span>
+        <a class="chip" href="{% url 'order_show' order.id %}">ver</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="actions mt">
+  <a class="btn primary" href="{% url 'order_create' %}">Crear nuevo pedido</a>
+</div>
+
+<div class="note mt">
+  <h3>Informacion</h3>
+  <p>Al crear un pedido se ejecutan los 4 patrones de diseño automaticamente.</p>
+  <p>Las notificaciones se guardan en la base de datos para auditoria.</p>
+</div>
+{% endblock %}

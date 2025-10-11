@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>MercadoBarrio - Patrones de Diseño</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="{% url 'home' %}">MercadoBarrio</a>
+    <nav class="nav">
+      <a class="btn" href="{% url 'order_create' %}">Confirmar pedido</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  
+  <section class="card">
+    {% block content %}
+    {% endblock %}
+  </section>
+  
+  <footer class="muted center mt">
+    <small>Sistema con patrones de diseño: Builder, Adapter, Strategy y Observer</small>
+  </footer>
+</main>
+</body>
+</html>
