@@ -38,73 +38,115 @@
   {% endif %}
 
   {% if patterns_info %}
-  <h2 class="hh">Patrones de Diseño Aplicados</h2>
+  <h2 class="hh" style="margin-top: 2rem;">Patrones de Diseño Aplicados</h2>
+  <p class="muted" style="margin-bottom: 1rem;">Cada patrón tiene un rol específico en el flujo del pedido:</p>
   
   {% if patterns_info.builder_info %}
-  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #007bff;">
-    <h3>{{ patterns_info.builder_info.pattern }}</h3>
-    <p><strong>Descripción:</strong> {{ patterns_info.builder_info.description }}</p>
-    <ul>
-      <li><strong>Código paquete:</strong> {{ patterns_info.builder_info.package_code }}</li>
-      <li><strong>Peso calculado:</strong> {{ patterns_info.builder_info.weight_calculated }}g</li>
-      <li><strong>Fragilidad manejada:</strong> 
-        {% if patterns_info.builder_info.fragility_handled %}Sí{% else %}No{% endif %}
-      </li>
-    </ul>
+  <div style="margin-bottom: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 12px; border-left: 6px solid #2196f3; box-shadow: 0 4px 6px rgba(33,150,243,0.2);">
+    <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="margin: 0; color: #1565c0;">{{ patterns_info.builder_info.pattern }}</h3>
+    </div>
+    <p style="margin: 0.5rem 0; color: #0d47a1;"><strong>Propósito:</strong> {{ patterns_info.builder_info.description }}</p>
+    <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem;">
+      <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Código paquete:</strong> <code style="background: #e3f2fd; padding: 2px 6px; border-radius: 4px;">{{ patterns_info.builder_info.package_code }}</code></li>
+        <li><strong>Peso calculado:</strong> {{ patterns_info.builder_info.weight_calculated }}g</li>
+        <li><strong>Fragilidad manejada:</strong> 
+          {% if patterns_info.builder_info.fragility_handled %}
+            <span style="color: #4caf50; font-weight: bold;">Sí</span>
+          {% else %}
+            <span style="color: #f44336;">No</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
   </div>
   {% endif %}
 
   {% if patterns_info.strategy_info %}
-  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #28a745;">
-    <h3>{{ patterns_info.strategy_info.pattern }}</h3>
-    <p><strong>Descripción:</strong> {{ patterns_info.strategy_info.description }}</p>
-    <ul>
-      <li><strong>Proveedor seleccionado:</strong> {{ patterns_info.strategy_info.provider_selected }}</li>
-      <li><strong>Factores de decisión:</strong> {{ patterns_info.strategy_info.decision_factors }}</li>
-    </ul>
+  <div style="margin-bottom: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; border-left: 6px solid #4caf50; box-shadow: 0 4px 6px rgba(76,175,80,0.2);">
+    <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="margin: 0; color: #2e7d32;">{{ patterns_info.strategy_info.pattern }}</h3>
+    </div>
+    <p style="margin: 0.5rem 0; color: #1b5e20;"><strong>Propósito:</strong> {{ patterns_info.strategy_info.description }}</p>
+    <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem;">
+      <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Proveedor seleccionado:</strong> <span style="background: #4caf50; color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold;">{{ patterns_info.strategy_info.provider_selected|upper }}</span></li>
+        <li><strong>Factores de decisión:</strong> {{ patterns_info.strategy_info.decision_factors }}</li>
+      </ul>
+    </div>
   </div>
   {% endif %}
 
   {% if patterns_info.adapter_info %}
-  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #ffc107;">
-    <h3>{{ patterns_info.adapter_info.pattern }}</h3>
-    <p><strong>Descripción:</strong> {{ patterns_info.adapter_info.description }}</p>
-    <ul>
-      <li><strong>Proveedor integrado:</strong> {{ patterns_info.adapter_info.provider_integrated }}</li>
-      <li><strong>Tracking generado:</strong> {{ patterns_info.adapter_info.tracking_generated }}</li>
-      <li><strong>Interfaz unificada:</strong> 
-        {% if patterns_info.adapter_info.unified_interface %}Implementada{% else %}No{% endif %}
-      </li>
-    </ul>
+  <div style="margin-bottom: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border-radius: 12px; border-left: 6px solid #ff9800; box-shadow: 0 4px 6px rgba(255,152,0,0.2);">
+    <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="margin: 0; color: #e65100;">{{ patterns_info.adapter_info.pattern }}</h3>
+    </div>
+    <p style="margin: 0.5rem 0; color: #e65100;"><strong>Propósito:</strong> {{ patterns_info.adapter_info.description }}</p>
+    <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem;">
+      <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Proveedor integrado:</strong> {{ patterns_info.adapter_info.provider_integrated }}</li>
+        <li><strong>Tracking generado:</strong> <code style="background: #fff8e1; padding: 2px 6px; border-radius: 4px; color: #e65100; font-weight: bold;">{{ patterns_info.adapter_info.tracking_generated }}</code></li>
+        <li><strong>Interfaz unificada:</strong> 
+          {% if patterns_info.adapter_info.unified_interface %}
+            <span style="color: #4caf50; font-weight: bold;">Implementada</span>
+          {% else %}
+            <span style="color: #f44336;">No</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
   </div>
   {% endif %}
 
   {% if patterns_info.observer_info %}
-  <div class="card" style="margin-bottom: 1rem; padding: 1rem; border-left: 4px solid #dc3545;">
-    <h3>{{ patterns_info.observer_info.pattern }}</h3>
-    <p><strong>Descripción:</strong> {{ patterns_info.observer_info.description }}</p>
-    <ul>
-      <li><strong>Notificaciones enviadas:</strong> {{ patterns_info.observer_info.notifications_sent }}</li>
-      <li><strong>Canales utilizados:</strong> 
-        {% for channel in patterns_info.observer_info.channels_used %}
-          <span class="chip">{{ channel }}</span>
-        {% endfor %}
-      </li>
-      <li><strong>Notificación automática:</strong> 
-        {% if patterns_info.observer_info.auto_notification %}Activada{% else %}Desactivada{% endif %}
-      </li>
-    </ul>
+  <div style="margin-bottom: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%); border-radius: 12px; border-left: 6px solid #e91e63; box-shadow: 0 4px 6px rgba(233,30,99,0.2);">
+    <div style="display: flex; align-items: center; margin-bottom: 0.75rem;">
+      <h3 style="margin: 0; color: #c2185b;">{{ patterns_info.observer_info.pattern }}</h3>
+    </div>
+    <p style="margin: 0.5rem 0; color: #880e4f;"><strong>Propósito:</strong> {{ patterns_info.observer_info.description }}</p>
+    <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem;">
+      <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Notificaciones enviadas:</strong> <span style="background: #e91e63; color: white; padding: 3px 10px; border-radius: 20px; font-weight: bold;">{{ patterns_info.observer_info.notifications_sent }}</span></li>
+        <li><strong>Canales utilizados:</strong> 
+          {% for channel in patterns_info.observer_info.channels_used %}
+            <span style="background: #f8bbd0; color: #880e4f; padding: 4px 10px; border-radius: 15px; margin: 2px; display: inline-block; font-size: 0.85rem; font-weight: 600;">{{ channel }}</span>
+          {% endfor %}
+        </li>
+        <li><strong>Notificación automática:</strong> 
+          {% if patterns_info.observer_info.auto_notification %}
+            <span style="color: #4caf50; font-weight: bold;">Activada</span>
+          {% else %}
+            <span style="color: #f44336;">Desactivada</span>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
   </div>
   {% endif %}
 
+  <h3 class="hh" style="margin-top: 2rem;">Probar Patrón Observer en Tiempo Real</h3>
+  <p class="muted" style="margin-bottom: 1rem;">Simula cambios de estado del pedido para ver el patrón Observer en acción:</p>
+  
   <div class="actions mt">
-    <button onclick="simulateStatusChange('dispatched')" class="btn">Simular Despacho</button>
-    <button onclick="simulateStatusChange('in_transit')" class="btn">Simular En Tránsito</button>
-    <button onclick="simulateStatusChange('delivered')" class="btn primary">Simular Entrega</button>
+    <button onclick="simulateStatusChange('dispatched')" class="btn" style="background: #2196f3; color: white; border: none; padding: 12px 20px; font-size: 1rem;">Simular Despacho</button>
+    <button onclick="simulateStatusChange('in_transit')" class="btn" style="background: #ff9800; color: white; border: none; padding: 12px 20px; font-size: 1rem;">Simular En Tránsito</button>
+    <button onclick="simulateStatusChange('delivered')" class="btn primary" style="background: #4caf50; color: white; border: none; padding: 12px 20px; font-size: 1rem;">Simular Entrega</button>
   </div>
+
+  <div id="logContainer" style="display: none; margin-top: 1.5rem; padding: 1.25rem; background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%); border-left: 6px solid #607d8b; border-radius: 12px; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; font-size: 0.875rem; line-height: 1.6; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-height: 500px; overflow-y: auto;"></div>
 
   <script>
     function simulateStatusChange(status) {
+      const logContainer = document.getElementById('logContainer');
+      logContainer.style.display = 'block';
+      logContainer.style.borderColor = '#2196f3';
+      logContainer.innerHTML = 'Procesando cambio de estado...\n\nEjecutando patrón Observer...\n\nPor favor espere...';
+      
+      // Scroll suave al contenedor de logs
+      logContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
       fetch(`/api/order/{{ order.order.id }}/status/`, {
         method: 'POST',
         headers: {
@@ -116,14 +158,67 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert(`Estado cambiado a ${status}!\nNotificaciones enviadas: ${data.notifications_sent.length}\nPatrón usado: ${data.pattern_used}`);
-          location.reload();
+          // Mostrar logs detallados en el contenedor con formato mejorado
+          let logText = '';
+          logText += '╔═══════════════════════════════════════════════════════════════╗\n';
+          logText += '║  LOGS DETALLADOS DEL PATRÓN OBSERVER                         ║\n';
+          logText += '╚═══════════════════════════════════════════════════════════════╝\n\n';
+          
+          if (data.detailed_logs && data.detailed_logs.length > 0) {
+            data.detailed_logs.forEach((log, index) => {
+              logText += log + '\n';
+            });
+          } else {
+            logText += `Estado cambiado exitosamente a: ${status.toUpperCase()}\n`;
+            logText += `Notificaciones enviadas: ${data.notifications_sent.length}\n`;
+            logText += `Canales: ${data.notifications_sent.join(', ')}\n`;
+            logText += `Patrón usado: ${data.pattern_used}\n`;
+          }
+          
+          logText += '\n╔═══════════════════════════════════════════════════════════════╗\n';
+          logText += '║  OPERACIÓN COMPLETADA EXITOSAMENTE                           ║\n';
+          logText += '╚═══════════════════════════════════════════════════════════════╝';
+          
+          logContainer.innerHTML = logText;
+          logContainer.style.borderColor = '#4caf50';
+          logContainer.style.background = 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)';
+          
+          // Alert con resumen mejorado
+          const statusText = {
+            'dispatched': 'DESPACHADO',
+            'in_transit': 'EN TRÁNSITO', 
+            'delivered': 'ENTREGADO'
+          };
+          
+          alert(`CAMBIO DE ESTADO COMPLETADO\n\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                `Estado: ${statusText[status] || status.toUpperCase()}\n` +
+                `Observers notificados: ${data.observer_count}\n` +
+                `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                `Canales de notificación:\n` +
+                `${data.channels_notified.map(c => '  - ' + c).join('\n')}\n\n` +
+                `Revisa los logs detallados arriba de los botones.`);
+          
+          // Recargar después de 2.5 segundos
+          setTimeout(() => location.reload(), 2500);
         } else {
-          alert('Error al cambiar estado: ' + data.error);
+          logContainer.innerHTML = '╔═══════════════════════════════════════╗\n' +
+                                   '║  ERROR EN LA OPERACIÓN               ║\n' +
+                                   '╚═══════════════════════════════════════╝\n\n' +
+                                   data.error;
+          logContainer.style.borderColor = '#f44336';
+          logContainer.style.background = 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)';
+          alert('Error al cambiar estado:\n\n' + data.error);
         }
       })
       .catch(error => {
-        alert('Error de conexión: ' + error);
+        logContainer.innerHTML = '╔═══════════════════════════════════════╗\n' +
+                                 '║  ERROR DE CONEXIÓN                   ║\n' +
+                                 '╚═══════════════════════════════════════╝\n\n' +
+                                 error.toString();
+        logContainer.style.borderColor = '#f44336';
+        logContainer.style.background = 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)';
+        alert('Error de conexión:\n\n' + error);
       });
     }
   </script>

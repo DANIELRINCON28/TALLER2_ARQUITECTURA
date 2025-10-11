@@ -148,11 +148,6 @@ class ShippingAdapterFactory:
     """
     Factory para crear adapters de proveedores de envio.
     Encapsula la creacion de adapters y permite facil extension.
-    
-    Ventajas:
-    - Centraliza la logica de creacion de adapters
-    - Facilita agregar nuevos proveedores sin modificar codigo cliente
-    - Proporciona un punto unico de configuracion
     """
     
     _adapters = {

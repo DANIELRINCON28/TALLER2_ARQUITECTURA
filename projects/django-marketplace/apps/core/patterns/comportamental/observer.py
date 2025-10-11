@@ -207,12 +207,6 @@ def truncate_message_for_db(message: str, max_length: int = 500) -> str:
 # ==========================================
 
 def create_default_observers() -> List[OrderObserver]:
-    """
-    Crea el conjunto estándar de observadores para pedidos.
-    
-    Returns:
-        Lista de observadores configurados por defecto
-    """
     return [
         EmailNotificationObserver(),
         WebhookNotificationObserver(),
@@ -222,12 +216,7 @@ def create_default_observers() -> List[OrderObserver]:
 
 
 def create_minimal_observers() -> List[OrderObserver]:
-    """
-    Crea un conjunto mínimo de observadores (para testing o desarrollo).
-    
-    Returns:
-        Lista con solo observadores esenciales
-    """
+
     return [
         LoggingObserver()
     ]
