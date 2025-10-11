@@ -1,16 +1,3 @@
-"""
-Script de prueba para demostrar el funcionamiento de los patrones de diseño.
-
-Ejecutar desde el directorio del proyecto:
-    python test_patterns.py
-
-Este script demuestra:
-- Builder: Construccion paso a paso de pedidos
-- Adapter: Integracion con multiples proveedores
-- Strategy: Seleccion inteligente segun estrategia
-- Observer: Notificaciones multi-canal
-"""
-
 import os
 import sys
 import django

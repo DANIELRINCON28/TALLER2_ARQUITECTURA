@@ -1,23 +1,11 @@
 ﻿# TALLER 2 - ARQUITECTURA DE SOFTWARE
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 Este repositorio contiene dos implementaciones del sistema MercadoBarrio siguiendo principios de arquitectura profesional, con **patrones de diseño** y **arquitectura limpia**.
 
-## ⭐ Características Destacadas
-
-- ✅ **Arquitectura Limpia** con separación de responsabilidades
-- ✅ **Patrones de Diseño** profesionales (Builder, Adapter, Strategy, Observer)
-- ✅ **Principios SOLID** aplicados correctamente
-- ✅ **Código Mantenible** y fácil de extender
-- ✅ **Testabilidad Mejorada** con módulos aislados
-- ✅ **Documentación Completa** con diagramas y ejemplos
-
 ```
 TALLER2_ARQUITECTURA/
-│
-├── 📚 docs/                          # Documentación del proyecto
-│   └── Actividad.md                  # Especificaciones y requerimientos (renombrado)
 │
 ├── 🚀 projects/                      # Proyectos implementados
 │   │
@@ -76,10 +64,6 @@ TALLER2_ARQUITECTURA/
 │       │               ├── strategy.py # Estrategias (340 líneas)
 │       │               └── observer.py # Observadores (310 líneas)
 │       │
-│       ├── docs/                     # 📚 Documentación técnica
-│       │   ├── ARQUITECTURA_PATRONES.md    # Guía completa
-│       │   ├── DIAGRAMA_ARQUITECTURA.md    # Diagramas ASCII
-│       │   └── RESUMEN_REFACTORIZACION.md  # Resumen del trabajo
 │       │
 │       ├── templates/                # 🎨 Plantillas HTML
 │       │   └── orders/               # Vistas de pedidos
@@ -91,7 +75,7 @@ TALLER2_ARQUITECTURA/
 │       ├── static/                   # 🌐 Archivos estáticos
 │       │   └── css/
 │       │       └── style.css
-│       │
+│       │── ejecucion_patrones.py     # Script de demostracion            
 │       ├── manage.py                 # CLI de Django
 │       ├── requirements.txt          # Dependencias Python
 │       └── .gitignore
@@ -100,7 +84,7 @@ TALLER2_ARQUITECTURA/
 
 ```
 
-## 🎯 Organización por Responsabilidades
+##  Organización por Responsabilidades
 
 ### Configuraciones (`config/`)
 - Archivos de configuración de base de datos
@@ -116,104 +100,61 @@ TALLER2_ARQUITECTURA/
 
 ### Patrones de Diseño Implementados (`apps/core/patterns/`)
 
-#### 🔨 Builder (Creacional)
+#### Builder (Creacional)
 - **Archivo**: `patterns/creacional/builder.py`
 - **Responsabilidad**: Construcción compleja de pedidos con validaciones
 - **Clase Principal**: `OrderBuilder`
 - **Features**: Validación de datos, cálculo de pesos, generación de códigos
 
-#### 🔌 Adapter (Eestructural)
+#### Adapter (Eestructural)
 - **Archivo**: `patterns/estructural/adapter.py`
 - **Responsabilidad**: Unificar APIs heterogéneas de proveedores de envío
 - **Proveedores**: MotoYA, EcoBike, PaqueteríaZ
 - **Features**: Interfaz común, Factory pattern, extensibilidad
 
-#### 📊 Strategy (Comportamental)
+#### Strategy (Comportamental)
 - **Archivo**: `patterns/comportamental/strategy.py`
 - **Responsabilidad**: Algoritmos intercambiables de selección de proveedor
 - **Estrategias**: Standard, EcoFriendly, CostOptimized, WeightBased
 - **Features**: Cambio dinámico, fácil extensión
 
-#### 🔔 Observer (Comportamental)
+#### Observer (Comportamental)
 - **Archivo**: `patterns/comportamental/observer.py`
 - **Responsabilidad**: Notificaciones multi-canal automáticas
 - **Observadores**: Email, Webhook, SMS, Logging
 - **Features**: Desacoplamiento, notificación automática
 
-## 📚 Documentación
+## Instalación y Ejecución
 
-- **`docs/Actividad.md`**: Requerimientos funcionales y no funcionales
-- **`docs/ARQUITECTURA_PATRONES.md`**: Documentación completa de patrones
-- **`docs/DIAGRAMA_ARQUITECTURA.md`**: Diagramas visuales de la arquitectura
-- **`docs/RESUMEN_REFACTORIZACION.md`**: Resumen del trabajo de refactorización
-- **`apps/core/patterns/README.md`**: Guía rápida de uso de patrones
-
-## 🎯 Principios SOLID Aplicados
-
-✅ **Single Responsibility**: Cada clase tiene una única responsabilidad  
-✅ **Open/Closed**: Abierto para extensión, cerrado para modificación  
-✅ **Liskov Substitution**: Los subtipos son intercambiables  
-✅ **Interface Segregation**: Interfaces específicas y pequeñas  
-✅ **Dependency Inversion**: Depende de abstracciones, no de concreciones
-
-## 🚀 Uso Rápido
-
-### Crear un Pedido con Patrones
-
-```python
-from apps.core.services import handle_create_order
-
-order_id = handle_create_order(
-    input_data={
-        'customer_email': 'cliente@email.com',
-        'address': 'Calle 123, Ciudad',
-        'priority': 'normal',
-        'fragility': 'ninguna',
-        'items': {'1': 2, '2': 3}  # {product_id: quantity}
-    },
-    strategy_type='eco'  # 'standard' | 'eco' | 'cost'
-)
+### 1. Crear entorno virtual
+```bash
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
 ```
 
-### Usar Facade (Interface Simplificada)
-
-```python
-from apps.core.services import OrderService
-
-service = OrderService(strategy_type='cost')
-order_info = service.create_order(
-    customer_email='cliente@email.com',
-    address='Calle 123',
-    priority='urgente',
-    fragility='alta',
-    items={'1': 2}
-)
+### 2. Instalar dependencias
+```bash
+pip install -r requirements.txt
 ```
 
-## 📊 Métricas de Calidad
+### 3. Configurar base de datos
+```bash
+python manage.py migrate
+```
 
-| Aspecto | Antes | Después | Mejora |
-|---------|-------|---------|--------|
-| **Líneas en services.py** | ~1000 | 167 | **-83%** |
-| **Archivos de patrones** | 0 | 4 módulos | +4 |
-| **Documentación** | 0 | 4 archivos | +4 |
-| **Testabilidad** | Difícil | Fácil | ✅ |
-| **Principios SOLID** | Violados | Cumplidos | ✅ |
+### 4. Poblar datos de prueba
+```bash
+python manage.py poblar_datos
+```
 
-### Presentación (`templates/` o `views/`)
-- Plantillas HTML
-- Layouts y componentes visuales
-- Separación de la capa de presentación
+### 5. Ejecutar servidor
+```bash
+python manage.py runserver
+```
+### 6. Ejecutar script 
+```bash
+python ejecucion_patrones.py
+```
 
-### Recursos Públicos (`public/` o `static/`)
-- Punto de entrada de la aplicación
-- CSS, JavaScript, imágenes
-- Assets accesibles desde el navegador
-
-### Base de Datos (`database/`)
-- Esquemas y migraciones
-- Scripts de inicialización
-- Datos de prueba (seeds)
-
----
-
+Acceder a: `http://localhost:8000`

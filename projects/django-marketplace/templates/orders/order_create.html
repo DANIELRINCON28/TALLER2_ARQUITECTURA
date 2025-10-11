@@ -44,9 +44,9 @@
   <div class="field mt">
     <span>Estrategia de Selección de Proveedor</span>
     <select name="strategy">
-      <option value="standard">📊 Estándar - Balance velocidad/costo</option>
-      <option value="eco">🌿 Ecológica - Menor impacto ambiental</option>
-      <option value="cost">💰 Optimizada por costo - Más económica</option>
+      <option value="standard">Estándar - Balance velocidad/costo</option>
+      <option value="eco">Ecológica - Menor impacto ambiental</option>
+      <option value="cost">Optimizada por costo - Más económica</option>
     </select>
     <small class="muted">Selecciona qué patrón Strategy usar para elegir el proveedor de entrega</small>
   </div>
@@ -68,13 +68,22 @@
 </form>
 
 <div class="note">
-  <h3> Patrones de Diseño Implementados:</h3>
+  <h3>Patrones de Diseño Implementados:</h3>
   <ul>
-    <li><strong>🔨 Builder (Creacional):</strong> Construcción compleja del pedido con validaciones</li>
-    <li><strong>🔌 Adapter (Estructural):</strong> Integración unificada con APIs de proveedores</li>
-    <li><strong>📊 Strategy (Comportamental):</strong> Selección inteligente de proveedores</li>
-    <li><strong>🔔 Observer (Comportamental):</strong> Sistema de notificaciones automáticas</li>
+    <li><strong>Builder (Creacional):</strong> Construcción compleja del pedido con validaciones</li>
+    <li><strong>Adapter (Estructural):</strong> Integración unificada con APIs de proveedores</li>
+    <li><strong>Strategy (Comportamental):</strong> Selección inteligente de proveedores</li>
+    <li><strong>Observer (Comportamental):</strong> Sistema de notificaciones automáticas</li>
   </ul>
-  <p><em>Al confirmar el pedido, se ejecutará el flujo completo con todos los patrones.</em></p>
+  <p><em>Al confirmar el pedido, se ejecutará el flujo completo con todos los patrones y verás logs detallados de cada uno.</em></p>
+  
+  <h3 style="margin-top: 1rem;">Qué verás después de crear el pedido:</h3>
+  <ul style="font-size: 0.9rem;">
+    <li>Logs detallados de la construcción del pedido (Builder)</li>
+    <li>Información de la estrategia usada y proveedor seleccionado (Strategy)</li>
+    <li>Tracking code generado por el adaptador (Adapter)</li>
+    <li>Lista de notificaciones enviadas por cada canal (Observer)</li>
+    <li>4 cards visuales con toda la información de cada patrón</li>
+  </ul>
 </div>
 {% endblock %}

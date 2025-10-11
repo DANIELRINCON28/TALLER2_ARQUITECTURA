@@ -1,13 +1,3 @@
-"""
-Vistas para la aplicación de pedidos con PATRONES DE DISEÑO implementados.
-Integra Builder, Adapter, Strategy y Observer según las directrices del proyecto.
-
-Patrones implementados:
-- CREACIONAL: Builder - Para construcción compleja de pedidos
-- Eestructural: Adapter - Para integración con proveedores de entrega
-- COMPORTAMENTAL: Strategy - Para selección inteligente de proveedores
-- COMPORTAMENTAL: Observer - Para sistema de notificaciones multi-canal
-"""
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import Http404, JsonResponse
@@ -48,15 +38,6 @@ def home_view(request):
 @require_http_methods(["GET", "POST"])
 @csrf_protect
 def order_create_view(request):
-    """
-    Vista para crear pedidos usando TODOS LOS PATRONES DE DISEÑO.
-    
-    Flujo implementado:
-    1. BUILDER: Construcción compleja del pedido con validaciones
-    2. STRATEGY: Selección inteligente del proveedor de entrega
-    3. ADAPTER: Integración unificada con API del proveedor
-    4. OBSERVER: Notificaciones multi-canal automáticas
-    """
     if request.method == 'POST':
         action = request.POST.get('__action', '')
         
@@ -94,14 +75,58 @@ def order_create_view(request):
                     strategy=form_data['strategy']
                 )
                 
-                # Mensaje de éxito con información de patrones
-                success_msg = (
-                    f"Pedido #{order_result['order_id']} creado exitosamente con patrones de diseño!\n"
-                    f"Builder: {order_result['patterns_used']['builder']}\n"
-                    f"Strategy: {order_result['patterns_used']['strategy']}\n"
-                    f"Adapter: {order_result['patterns_used']['adapter']}\n"
-                    f"Observer: {order_result['patterns_used']['observer']}"
-                )
+                # Obtener información detallada de los patrones
+                pattern_logs = order_result.get('pattern_logs', {})
+                
+                # Mensaje de éxito con información DETALLADA de patrones - FORMATO MEJORADO
+                success_msg = "╔═══════════════════════════════════════════════════════════════╗\n"
+                success_msg += f"║  ✅ PEDIDO #{order_result['order_id']} CREADO EXITOSAMENTE                      ║\n"
+                success_msg += "╚═══════════════════════════════════════════════════════════════╝\n\n"
+                
+                success_msg += "┌─────────────────────────────────────────────────────────────┐\n"
+                success_msg += "│  📋 LOGS DETALLADOS DE PATRONES DE DISEÑO                   │\n"
+                success_msg += "└─────────────────────────────────────────────────────────────┘\n\n"
+                
+                # BUILDER
+                success_msg += "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n"
+                success_msg += "┃  🔨 PATRÓN BUILDER (Creacional)                           ┃\n"
+                success_msg += "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n"
+                success_msg += f"   Resultado: {order_result['patterns_used']['builder']}\n\n"
+                for i, log in enumerate(pattern_logs.get('builder', []), 1):
+                    prefix = "   ├─" if i < len(pattern_logs.get('builder', [])) else "   └─"
+                    success_msg += f"{prefix} {log}\n"
+                
+                # STRATEGY
+                success_msg += "\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n"
+                success_msg += "┃  📊 PATRÓN STRATEGY (Comportamental)                      ┃\n"
+                success_msg += "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n"
+                success_msg += f"   Resultado: {order_result['patterns_used']['strategy']}\n\n"
+                for i, log in enumerate(pattern_logs.get('strategy', []), 1):
+                    prefix = "   ├─" if i < len(pattern_logs.get('strategy', [])) else "   └─"
+                    success_msg += f"{prefix} {log}\n"
+                
+                # ADAPTER
+                success_msg += "\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n"
+                success_msg += "┃  🔌 PATRÓN ADAPTER (Estructural)                          ┃\n"
+                success_msg += "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n"
+                success_msg += f"   Resultado: {order_result['patterns_used']['adapter']}\n\n"
+                for i, log in enumerate(pattern_logs.get('adapter', []), 1):
+                    prefix = "   ├─" if i < len(pattern_logs.get('adapter', [])) else "   └─"
+                    success_msg += f"{prefix} {log}\n"
+                
+                # OBSERVER
+                success_msg += "\n┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n"
+                success_msg += "┃  🔔 PATRÓN OBSERVER (Comportamental)                      ┃\n"
+                success_msg += "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n"
+                success_msg += f"   Resultado: {order_result['patterns_used']['observer']}\n\n"
+                for i, log in enumerate(pattern_logs.get('observer', []), 1):
+                    prefix = "   ├─" if i < len(pattern_logs.get('observer', [])) else "   └─"
+                    success_msg += f"{prefix} {log}\n"
+                
+                success_msg += "\n╔═══════════════════════════════════════════════════════════════╗\n"
+                success_msg += "║  ✨ TODOS LOS PATRONES EJECUTADOS EXITOSAMENTE               ║\n"
+                success_msg += "╚═══════════════════════════════════════════════════════════════╝"
+                
                 messages.success(request, success_msg)
                 
                 return redirect('order_show', order_id=order_result['order_id'])
@@ -123,18 +148,6 @@ def order_create_view(request):
 
 
 def order_show_view(request, order_id):
-    """
-    Vista para mostrar detalles de pedido con información de PATRONES DE DISEÑO.
-    
-    Muestra:
-    - Información del pedido construido con Builder
-    - Detalles del proveedor seleccionado con Strategy
-    - Integración realizada con Adapter
-    - Historial de notificaciones del Observer
-    
-    Args:
-        order_id: ID del pedido a mostrar
-    """
     try:
         order_id = int(order_id)
     except (ValueError, TypeError):
@@ -159,10 +172,6 @@ def order_show_view(request, order_id):
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def order_status_api(request, order_id):
-    """
-    API para obtener estado del pedido en tiempo real.
-    Útil para demostrar el patrón Observer en acción.
-    """
     try:
         order_id = int(order_id)
         order_service = OrderService()
@@ -170,13 +179,25 @@ def order_status_api(request, order_id):
         # Simular cambio de estado para demostrar Observer
         if request.method == 'POST':
             new_status = request.POST.get('status', 'dispatched')
-            notifications_sent = order_service.simulate_status_change(order_id, new_status)
+            
+            # Crear logs detallados del patrón Observer
+            observer_logs = []
+            observer_logs.append("🔔 PATRÓN OBSERVER ACTIVADO")
+            observer_logs.append(f"Evento: Cambio de estado del pedido #{order_id}")
+            observer_logs.append(f"Estado nuevo: {new_status.upper()}")
+            observer_logs.append("")
+            observer_logs.append("Ejecutando simulación de cambio de estado...")
+            
+            notifications_sent = order_service.simulate_status_change(order_id, new_status, observer_logs)
             
             return JsonResponse({
                 'success': True,
                 'status_changed': new_status,
                 'notifications_sent': notifications_sent,
-                'pattern_used': 'Observer - Sistema de notificaciones automáticas'
+                'pattern_used': 'Observer - Sistema de notificaciones automáticas',
+                'detailed_logs': observer_logs,
+                'observer_count': len(notifications_sent),
+                'channels_notified': notifications_sent
             })
         
         # GET: Obtener estado actual

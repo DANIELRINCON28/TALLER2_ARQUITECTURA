@@ -51,12 +51,74 @@
 {% endif %}
 
 <div class="actions mt">
-  <a class="btn primary" href="{% url 'order_create' %}">Crear nuevo pedido</a>
+  <a class="btn primary" href="{% url 'order_create' %}" style="font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+    Crear nuevo pedido (Ver patrones en acción)
+  </a>
+  <button onclick="showScriptInfo()" class="btn" style="padding: 0.75rem 1.5rem;">
+    Ver información del script de demostración
+  </button>
 </div>
 
+<div id="scriptInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-left: 4px solid #28a745; border-radius: 8px;">
+  <h3 style="margin-top: 0;">Script de Demostración: ejecucion_patrones.py</h3>
+  <p><strong>Ubicación:</strong> <code>projects/django-marketplace/ejecucion_patrones.py</code></p>
+  
+  <p><strong>Cómo ejecutarlo:</strong></p>
+  <pre style="background: #fff; padding: 0.5rem; border-radius: 4px; overflow-x: auto;">cd projects\django-marketplace
+python ejecucion_patrones.py</pre>
+  
+  <p><strong>Lo que verás:</strong></p>
+  <ul style="line-height: 1.8;">
+    <li><strong>Sección Builder:</strong> 3 escenarios de construcción con diferentes configuraciones</li>
+    <li><strong>Sección Adapter:</strong> Integración con MotoYA, EcoBike y PaqueteriaZ</li>
+    <li><strong>Sección Strategy:</strong> 3 estrategias (Standard, Eco, Cost) con diferentes casos</li>
+    <li><strong>Sección Observer:</strong> Notificaciones multi-canal en acción</li>
+    <li><strong>Sección Integración:</strong> FLUJO COMPLETO end-to-end usando todos los patrones</li>
+  </ul>
+  
+  <p><strong>Características del script:</strong></p>
+  <ul>
+    <li>Logs detallados con formato claro</li>
+    <li>Pausas interactivas (presiona ENTER para continuar)</li>
+    <li>Explicación de beneficios de cada patrón</li>
+    <li>Usa datos reales de la base de datos</li>
+    <li>Resumen final de la integración completa</li>
+  </ul>
+  
+  <button onclick="document.getElementById('scriptInfo').style.display='none'" class="btn" style="margin-top: 0.5rem;">
+    Cerrar
+  </button>
+</div>
+
+<script>
+  function showScriptInfo() {
+    const info = document.getElementById('scriptInfo');
+    info.style.display = info.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
 <div class="note mt">
-  <h3>Informacion</h3>
-  <p>Al crear un pedido se ejecutan los 4 patrones de diseño automaticamente.</p>
-  <p>Las notificaciones se guardan en la base de datos para auditoria.</p>
+  <h3>Información del Sistema</h3>
+  <p><strong>Al crear un pedido se ejecutan automáticamente:</strong></p>
+  <ol style="margin-left: 1.5rem; line-height: 1.8;">
+    <li><strong>Builder:</strong> Construye el pedido paso a paso con validaciones</li>
+    <li><strong>Strategy:</strong> Selecciona el mejor proveedor según tus criterios</li>
+    <li><strong>Adapter:</strong> Se integra con la API del proveedor seleccionado</li>
+    <li><strong>Observer:</strong> Envía notificaciones automáticas a todos los canales</li>
+  </ol>
+  
+  <p style="margin-top: 1rem;"><strong>Verás logs detallados de:</strong></p>
+  <ul style="margin-left: 1.5rem;">
+    <li>Código de paquete generado</li>
+    <li>Peso total calculado</li>
+    <li>Proveedor seleccionado y razón</li>
+    <li>Tracking code generado</li>
+    <li>Notificaciones enviadas por canal (Email, SMS, Webhook, Logging)</li>
+  </ul>
+  
+  <p style="margin-top: 1rem; padding: 0.5rem; background: #e7f3ff; border-left: 3px solid #007bff;">
+    <strong>Tip:</strong> En la página de detalle del pedido, usa los botones de "Simular Despacho/Tránsito/Entrega" 
+    para ver el patrón Observer en acción con logs en tiempo real.
+  </p>
 </div>
 {% endblock %}

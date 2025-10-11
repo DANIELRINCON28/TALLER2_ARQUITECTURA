@@ -34,20 +34,30 @@ def shipment_by_order(order_id: int) -> Optional[Shipment]:
     """Obtiene el envío de un pedido."""
     return Shipment.objects.filter(order_id=order_id).order_by('-id').first()
 
-def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standard') -> int:
+def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standard', pattern_logs: Dict[str, list] = None) -> int:
     """
     Crea un pedido usando TODOS los patrones de diseño.
     
     Args:
         input_data: Datos del pedido
         strategy_type: Estrategia de selección ('standard' | 'eco' | 'cost')
+        pattern_logs: Diccionario para registrar logs detallados de cada patrón
     
     Returns:
         ID del pedido creado
     """
+    if pattern_logs is None:
+        pattern_logs = {'builder': [], 'strategy': [], 'adapter': [], 'observer': []}
+    
     print(" Iniciando creación con patrones")
     
     # BUILDER: Construir pedido
+    pattern_logs['builder'].append("🔨 PATRÓN BUILDER INICIADO")
+    pattern_logs['builder'].append(f"Cliente: {input_data.get('customer_email', '')}")
+    pattern_logs['builder'].append(f"Dirección: {input_data.get('address', '')}")
+    pattern_logs['builder'].append(f"Prioridad: {input_data.get('priority', 'normal')}")
+    pattern_logs['builder'].append(f"Fragilidad: {input_data.get('fragility', 'ninguna')}")
+    
     builder = OrderBuilder()
     order = (builder
             .with_customer(input_data.get('customer_email', ''))
@@ -60,11 +70,20 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
     order_summary = builder.get_order_summary()
     print(f" Pedido #{order.id} construido")
     
+    pattern_logs['builder'].append(f"✓ Pedido #{order.id} construido exitosamente")
+    pattern_logs['builder'].append(f"Código paquete: {order_summary['package_code']}")
+    pattern_logs['builder'].append(f"Peso total calculado: {order.total_weight}g")
+    pattern_logs['builder'].append(f"Etiqueta de manejo: {order_summary['handling_label']}")
+    pattern_logs['builder'].append(f"Fecha estimada: {order_summary['estimated_pickup_date']}")
+    
     # STRATEGY: Seleccionar proveedor
+    pattern_logs['strategy'].append("📊 PATRÓN STRATEGY INICIADO")
     try:
         strategy = get_strategy_by_name(strategy_type)
+        pattern_logs['strategy'].append(f"Estrategia seleccionada: {strategy_type.upper()}")
     except ValueError:
         strategy = StandardSelectionStrategy()
+        pattern_logs['strategy'].append(f"Estrategia por defecto: STANDARD")
     
     selector = ProviderSelector(strategy)
     selection_data = {
@@ -73,12 +92,29 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
         'weight': order.total_weight,
         'address': order.address
     }
+    pattern_logs['strategy'].append(f"Factores de decisión:")
+    pattern_logs['strategy'].append(f"  - Prioridad: {selection_data['priority']}")
+    pattern_logs['strategy'].append(f"  - Fragilidad: {selection_data['fragility']}")
+    pattern_logs['strategy'].append(f"  - Peso: {selection_data['weight']}g")
+    pattern_logs['strategy'].append(f"  - Dirección: {selection_data['address']}")
+    
     available_providers = ShippingAdapterFactory.get_available_providers()
+    pattern_logs['strategy'].append(f"Proveedores disponibles: {', '.join(available_providers)}")
+    
     selected_provider = selector.select_provider(selection_data, available_providers)
     print(f" Proveedor: {selected_provider}")
     
+    pattern_logs['strategy'].append(f"✓ Proveedor seleccionado: {selected_provider.upper()}")
+    pattern_logs['strategy'].append(f"Razón: {strategy.__class__.__name__} aplicó su algoritmo")
+    
     # ADAPTER: Integrar con proveedor
+    pattern_logs['adapter'].append("🔌 PATRÓN ADAPTER INICIADO")
+    pattern_logs['adapter'].append(f"Creando adaptador para: {selected_provider}")
+    
     provider_adapter = ShippingAdapterFactory.create_adapter(selected_provider)
+    pattern_logs['adapter'].append(f"Adaptador creado: {provider_adapter.__class__.__name__}")
+    pattern_logs['adapter'].append(f"Interfaz unificada: ShippingProviderInterface")
+    
     adapter_data = {
         'order_id': order.id,
         'weight': order.total_weight,
@@ -86,8 +122,16 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
         'fragility': order.fragility,
         'address': order.address
     }
+    pattern_logs['adapter'].append(f"Datos enviados al proveedor:")
+    pattern_logs['adapter'].append(f"  - Order ID: {adapter_data['order_id']}")
+    pattern_logs['adapter'].append(f"  - Weight: {adapter_data['weight']}g")
+    pattern_logs['adapter'].append(f"  - Priority: {adapter_data['priority']}")
+    
     tracking_code = provider_adapter.request_pickup(adapter_data)
     print(f" Tracking: {tracking_code}")
+    
+    pattern_logs['adapter'].append(f"✓ Tracking code generado: {tracking_code}")
+    pattern_logs['adapter'].append(f"Proveedor nombre: {provider_adapter.get_provider_name()}")
     
     # Registrar envío
     with transaction.atomic():
@@ -97,12 +141,21 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
             tracking_id=tracking_code,
             status='CONFIRMADO'
         )
+    pattern_logs['adapter'].append(f"✓ Envío registrado en base de datos")
     
     # OBSERVER: Notificar
+    pattern_logs['observer'].append("🔔 PATRÓN OBSERVER INICIADO")
+    pattern_logs['observer'].append("Creando subject y registrando observers...")
+    
     notification_subject = OrderNotificationSubject()
     observers = create_default_observers()
+    
+    observer_names = []
     for observer in observers:
         notification_subject.attach(observer)
+        observer_name = observer.__class__.__name__
+        observer_names.append(observer_name)
+        pattern_logs['observer'].append(f"  - Observer registrado: {observer_name}")
     
     notification_data = {
         'order_code': order_summary['package_code'],
@@ -115,8 +168,17 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
         'fragility': order.fragility,
         'address': order.address
     }
+    
+    pattern_logs['observer'].append(f"Notificando a {len(observers)} observers...")
     notification_subject.notify(notification_data)
     print(f" Notificaciones enviadas")
+    
+    # Contar notificaciones en BD
+    notifications_count = Notification.objects.filter(order_id=order.id).count()
+    pattern_logs['observer'].append(f"✓ {notifications_count} notificaciones enviadas y guardadas en BD")
+    
+    channels = Notification.objects.filter(order_id=order.id).values_list('channel', flat=True).distinct()
+    pattern_logs['observer'].append(f"Canales utilizados: {', '.join(channels)}")
     
     return order.id
 
@@ -134,8 +196,15 @@ class OrderService:
         Crea un pedido usando todos los patrones de diseño.
         
         Returns:
-            Diccionario con order_id y detalles del pedido
+            Diccionario con order_id, detalles del pedido y logs detallados
         """
+        pattern_logs = {
+            'builder': [],
+            'strategy': [],
+            'adapter': [],
+            'observer': []
+        }
+        
         input_data = {
             'customer_email': customer_email,
             'address': address,
@@ -144,7 +213,10 @@ class OrderService:
             'items': items
         }
         
-        order_id = handle_create_order(input_data, strategy)
+        # Registrar inicio
+        pattern_logs['builder'].append(f"Iniciando construcción de pedido para {customer_email}")
+        
+        order_id = handle_create_order(input_data, strategy, pattern_logs)
         
         # Obtener información de patrones aplicados
         order_info = self.get_order_info(order_id)
@@ -152,7 +224,8 @@ class OrderService:
         return {
             'order_id': order_id,
             'success': True,
-            'patterns_used': order_info['patterns_used']
+            'patterns_used': order_info['patterns_used'],
+            'pattern_logs': pattern_logs
         }
     
     def get_order_info(self, order_id: int) -> Dict[str, Any]:
@@ -192,17 +265,11 @@ class OrderService:
         except Order.DoesNotExist:
             raise ValueError(f'Pedido #{order_id} no encontrado')
     
-    def simulate_status_change(self, order_id: int, new_status: str) -> list:
-        """
-        Simula cambio de estado y dispara notificaciones (patrón Observer).
-        
-        Args:
-            order_id: ID del pedido
-            new_status: Nuevo estado ('dispatched', 'in_transit', 'delivered')
-        
-        Returns:
-            Lista de notificaciones enviadas
-        """
+    def simulate_status_change(self, order_id: int, new_status: str, observer_logs: list = None) -> list:
+        """Simula cambio de estado y dispara notificaciones Observer."""
+        if observer_logs is None:
+            observer_logs = []
+            
         try:
             order = Order.objects.get(id=order_id)
             shipment = Shipment.objects.filter(order_id=order_id).first()
@@ -210,16 +277,33 @@ class OrderService:
             if not shipment:
                 raise ValueError('No se encontró envío para este pedido')
             
+            observer_logs.append(f"✓ Pedido #{order_id} encontrado")
+            observer_logs.append(f"Cliente: {order.customer_email}")
+            observer_logs.append(f"Estado anterior: {shipment.status}")
+            observer_logs.append("")
+            
             # Actualizar estado
+            old_status = shipment.status
             shipment.status = new_status.upper()
             shipment.save()
+            
+            observer_logs.append(f"✓ Estado actualizado: {old_status} → {new_status.upper()}")
+            observer_logs.append("")
+            observer_logs.append("Iniciando sistema de notificaciones...")
+            observer_logs.append("")
             
             # Disparar notificaciones con Observer
             subject = OrderNotificationSubject()
             observers = create_default_observers()
             
+            observer_logs.append(f"Registrando {len(observers)} observers:")
             for observer in observers:
                 subject.attach(observer)
+                observer_name = observer.__class__.__name__
+                observer_logs.append(f"  ├─ {observer_name}")
+            
+            observer_logs.append("")
+            observer_logs.append("Notificando a todos los observers...")
             
             notification_data = {
                 'order_id': order.id,
@@ -236,6 +320,17 @@ class OrderService:
             
             subject.notify(notification_data)
             
+            # Contar notificaciones
+            new_notifications = Notification.objects.filter(
+                order_id=order.id,
+                message__contains=new_status
+            ).count()
+            
+            observer_logs.append("")
+            observer_logs.append(f"✓ Notificaciones completadas:")
+            observer_logs.append(f"  └─ {new_notifications} notificaciones nuevas enviadas")
+            observer_logs.append(f"  └─ Total notificaciones del pedido: {Notification.objects.filter(order_id=order.id).count()}")
+            
             # Retornar lista de canales notificados
             return [obs.get_observer_name() for obs in observers]
             
@@ -244,16 +339,6 @@ class OrderService:
 
 
 def get_order_processing_info(order_id: int) -> Dict[str, Any]:
-    """
-    Obtiene información detallada sobre los patrones aplicados en un pedido.
-    Útil para auditoría y documentación del sistema.
-    
-    Args:
-        order_id: ID del pedido
-        
-    Returns:
-        Diccionario con información de patrones aplicados
-    """
     try:
         order = Order.objects.get(id=order_id)
         shipment = Shipment.objects.filter(order_id=order_id).first()
