@@ -1,8 +1,8 @@
 """
-Patrones eestructurales (estructural Patterns).
+Patrones estructurales (Structural Patterns).
 
-Estos patrones se enfocan en cómo las clases y objetos se componen
-para formar estructuras más grandes.
+Estos patrones se enfocan en como las clases y objetos se componen
+para formar estructuras mas grandes.
 """
 
 from .adapter import (

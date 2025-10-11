@@ -141,65 +141,39 @@ class PaqueteriaZAdapter:
 
 
 # ==========================================
-# FACTORY (Patrón adicional para crear adapters)
+# FACTORY (Patron adicional para crear adapters)
 # ==========================================
 
-# class ShippingAdapterFactory:
-#     """
-#     Factory para crear adapters de proveedores de envío.
-#     Encapsula la creación de adapters y permite fácil extensión.
+class ShippingAdapterFactory:
+    """
+    Factory para crear adapters de proveedores de envio.
+    Encapsula la creacion de adapters y permite facil extension.
     
-#     Ventajas:
-#     - Centraliza la lógica de creación de adapters
-#     - Facilita agregar nuevos proveedores sin modificar código cliente
-#     - Proporciona un punto único de configuración
-#     """
+    Ventajas:
+    - Centraliza la logica de creacion de adapters
+    - Facilita agregar nuevos proveedores sin modificar codigo cliente
+    - Proporciona un punto unico de configuracion
+    """
     
-#     _adapters = {
-#         'motoya': MotoYAAdapter,
-#         'ecobike': EcoBikeAdapter,
-#         'paqz': PaqueteriaZAdapter
-#     }
+    _adapters = {
+        'motoya': MotoYAAdapter,
+        'ecobike': EcoBikeAdapter,
+        'paqz': PaqueteriaZAdapter
+    }
     
-#     @classmethod
-#     def create_adapter(cls, provider_name: str) -> ShippingProvider:
-#         """
-#         Crea un adapter para el proveedor especificado.
+    @classmethod
+    def create_adapter(cls, provider_name: str) -> ShippingProvider:
+        adapter_class = cls._adapters.get(provider_name.lower())
+        if not adapter_class:
+            available = ', '.join(cls._adapters.keys())
+            raise ValueError(f'Proveedor no valido: {provider_name}. Disponibles: {available}')
         
-#         Args:
-#             provider_name: Nombre del proveedor ('motoya', 'ecobike', 'paqz')
-            
-#         Returns:
-#             Instancia del adapter correspondiente
-            
-#         Raises:
-#             ValueError: Si el proveedor no es válido
-#         """
-#         adapter_class = cls._adapters.get(provider_name.lower())
-#         if not adapter_class:
-#             available = ', '.join(cls._adapters.keys())
-#             raise ValueError(f'Proveedor no válido: {provider_name}. Disponibles: {available}')
-        
-#         return adapter_class()
+        return adapter_class()
     
-#     @classmethod
-#     def get_available_providers(cls) -> List[str]:
-#         """
-#         Obtiene la lista de proveedores disponibles.
-        
-#         Returns:
-#             Lista de nombres de proveedores
-#         """
-#         return list(cls._adapters.keys())
+    @classmethod
+    def get_available_providers(cls) -> List[str]:
+        return list(cls._adapters.keys())
     
-#     @classmethod
-#     def register_provider(cls, name: str, adapter_class):
-#         """
-#         Registra un nuevo proveedor dinámicamente.
-#         Permite extensibilidad sin modificar el código existente (OCP).
-        
-#         Args:
-#             name: Nombre del proveedor
-#             adapter_class: Clase del adapter
-#         """
-#         cls._adapters[name.lower()] = adapter_class
+    @classmethod
+    def register_provider(cls, name: str, adapter_class):
+        cls._adapters[name.lower()] = adapter_class

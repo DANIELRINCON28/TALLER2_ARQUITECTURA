@@ -10,12 +10,6 @@ class ProviderSelectionStrategy(ABC):
     """
     Interfaz abstracta para estrategias de selección de proveedor.
     Define el contrato que todas las estrategias concretas deben cumplir.
-    
-    Ventajas:
-    - Separa el algoritmo de selección de su uso
-    - Permite cambiar estrategias en tiempo de ejecución
-    - Facilita agregar nuevas estrategias sin modificar código existente
-    - Hace el código más testeable
     """
     
     @abstractmethod
@@ -24,27 +18,10 @@ class ProviderSelectionStrategy(ABC):
         order_data: Dict[str, Any],
         available_providers: List[str]
     ) -> str:
-        """
-        Selecciona el proveedor de envío más adecuado según el algoritmo específico.
-        
-        Args:
-            order_data: Datos del pedido (peso, fragilidad, prioridad, etc.)
-            available_providers: Lista de proveedores disponibles
-            
-        Returns:
-            Nombre del proveedor seleccionado
-        """
         pass
     
     def get_strategy_name(self) -> str:
-        """
-        Obtiene el nombre descriptivo de la estrategia.
-        
-        Returns:
-            Nombre de la estrategia
-        """
         return self.__class__.__name__
-
 
 # ==========================================
 # ESTRATEGIAS CONCRETAS (Concrete Strategies)
@@ -84,7 +61,6 @@ class StandardSelectionStrategy(ProviderSelectionStrategy):
         # Fallback: Primer proveedor disponible
         return available_providers[0] if available_providers else 'motoya'
 
-
 class EcoFriendlySelectionStrategy(ProviderSelectionStrategy):
     
     def select_provider(
@@ -112,7 +88,6 @@ class EcoFriendlySelectionStrategy(ProviderSelectionStrategy):
         
         # Fallback
         return available_providers[0] if available_providers else 'ecobike'
-
 
 class CostOptimizedSelectionStrategy(ProviderSelectionStrategy):
 
@@ -154,7 +129,6 @@ class CostOptimizedSelectionStrategy(ProviderSelectionStrategy):
         # Fallback: PaqueteríaZ (generalmente más económico)
         return 'paqz' if 'paqz' in available_providers else available_providers[0]
 
-
 class WeightBasedSelectionStrategy(ProviderSelectionStrategy):
     
     def select_provider(
@@ -180,7 +154,6 @@ class WeightBasedSelectionStrategy(ProviderSelectionStrategy):
         # Fallback
         return available_providers[0] if available_providers else 'motoya'
 
-
 # ==========================================
 # CONTEXTO (Context)
 # ==========================================
@@ -188,21 +161,9 @@ class WeightBasedSelectionStrategy(ProviderSelectionStrategy):
 class ProviderSelector:
     
     def __init__(self, strategy: Optional[ProviderSelectionStrategy] = None):
-        """
-        Inicializa el selector con una estrategia.
-        
-        Args:
-            strategy: Estrategia a usar (default: StandardSelectionStrategy)
-        """
         self._strategy = strategy or StandardSelectionStrategy()
     
     def set_strategy(self, strategy: ProviderSelectionStrategy) -> None:
-        """
-        Cambia la estrategia en tiempo de ejecución.
-        
-        Args:
-            strategy: Nueva estrategia a usar
-        """
         self._strategy = strategy
     
     def select_provider(
@@ -210,27 +171,10 @@ class ProviderSelector:
         order_data: Dict[str, Any],
         available_providers: List[str]
     ) -> str:
-        """
-        Selecciona un proveedor usando la estrategia configurada.
-        
-        Args:
-            order_data: Datos del pedido
-            available_providers: Lista de proveedores disponibles
-            
-        Returns:
-            Nombre del proveedor seleccionado
-        """
         return self._strategy.select_provider(order_data, available_providers)
     
     def get_current_strategy_name(self) -> str:
-        """
-        Obtiene el nombre de la estrategia actual.
-        
-        Returns:
-            Nombre de la estrategia
-        """
         return self._strategy.get_strategy_name()
-
 
 # ==========================================
 # UTILIDADES
@@ -246,18 +190,6 @@ STRATEGY_REGISTRY = {
 
 
 def get_strategy_by_name(name: str) -> ProviderSelectionStrategy:
-    """
-    Obtiene una instancia de estrategia por nombre.
-    
-    Args:
-        name: Nombre de la estrategia ('standard', 'eco', 'cost', 'weight')
-        
-    Returns:
-        Instancia de la estrategia
-        
-    Raises:
-        ValueError: Si el nombre no es válido
-    """
     strategy_class = STRATEGY_REGISTRY.get(name.lower())
     if not strategy_class:
         available = ', '.join(STRATEGY_REGISTRY.keys())

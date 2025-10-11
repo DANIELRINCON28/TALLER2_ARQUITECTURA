@@ -1,30 +1,20 @@
-<!-- 
-  Formulario de creación de pedidos.
-  Traducción directa de order_create.php manteniendo la misma estructura y funcionalidad.
--->
 {% extends 'orders/base.html' %}
 
 {% block content %}
-<!-- Equivalente a: <h1 class="h">Confirmación de Pedido</h1> -->
 <h1 class="h">Confirmación de Pedido</h1>
 
-<!-- 
-  Equivalente a: <form method="post" action="?r=order/create" class="form">
-  En Django se usa {% csrf_token %} para protección CSRF 
--->
 <form method="post" action="{% url 'order_create' %}" class="form">
   {% csrf_token %}
-  <!-- Equivalente a: <input type="hidden" name="__action" value="order.store"> -->
   <input type="hidden" name="__action" value="order.store">
   
   <div class="grid2">
-    <!-- Equivalente a: <label class="field"><span>Email del cliente</span><input type="email" name="customer_email" required></label> -->
+   
     <label class="field">
       <span>Email del cliente</span>
       <input type="email" name="customer_email" required>
     </label>
     
-    <!-- Equivalente a: <label class="field"><span>Dirección de entrega</span><input type="text" name="address" required></label> -->
+   
     <label class="field">
       <span>Dirección de entrega</span>
       <input type="text" name="address" required>
@@ -32,7 +22,7 @@
   </div>
   
   <div class="grid2">
-    <!-- Equivalente a: <label class="field"><span>Prioridad</span><select name="priority">... -->
+  
     <label class="field">
       <span>Prioridad</span>
       <select name="priority">
@@ -40,12 +30,7 @@
         <option value="express">Express</option>
       </select>
     </label>
-    
-    <!-- 
-      Equivalente a: 
-      <label class="field"><span>Fragilidad</span><select name="fragility">
-      <?php foreach ($opts as $o): ?><option value="<?= $o ?>"><?= ucfirst($o) ?></option><?php endforeach; ?>
-    -->
+
     <label class="field">
       <span>Fragilidad</span>
       <select name="fragility">
@@ -56,9 +41,8 @@
     </label>
   </div>
 
-  <!-- NUEVA SECCIÓN: Selección de Estrategia de Patrones -->
   <div class="field mt">
-    <span>🎯 Estrategia de Selección de Proveedor</span>
+    <span>Estrategia de Selección de Proveedor</span>
     <select name="strategy">
       <option value="standard">📊 Estándar - Balance velocidad/costo</option>
       <option value="eco">🌿 Ecológica - Menor impacto ambiental</option>
@@ -67,19 +51,9 @@
     <small class="muted">Selecciona qué patrón Strategy usar para elegir el proveedor de entrega</small>
   </div>
   
-  <!-- Equivalente a: <h2 class="hh mt">Items</h2> -->
   <h2 class="hh mt">Items</h2>
   <p class="muted">Selecciona cantidades (0 para omitir).</p>
   
-  <!-- 
-    Equivalente a: 
-    <?php foreach ($products as $p): ?>
-      <label class="field-inline">
-        <span><?= htmlspecialchars($p['name']) ?> (<?= (int)$p['weight_grams'] ?> g)</span>
-        <input class="qty" type="number" name="items[<?= (int)$p['id'] ?>]" min="0" max="20" value="0">
-      </label>
-    <?php endforeach; ?>
-  -->
   {% for product in products %}
     <label class="field-inline">
       <span>{{ product.name }} ({{ product.weight_grams }} g)</span>
@@ -87,19 +61,17 @@
     </label>
   {% endfor %}
   
-  <!-- Equivalente a las acciones del formulario en PHP -->
   <div class="actions mt">
     <button class="btn primary">Confirmar y despachar</button>
     <a class="btn" href="{% url 'home' %}">Cancelar</a>
   </div>
 </form>
 
-<!-- Información sobre patrones implementados -->
 <div class="note">
-  <h3>🎯 Patrones de Diseño Implementados:</h3>
+  <h3> Patrones de Diseño Implementados:</h3>
   <ul>
     <li><strong>🔨 Builder (Creacional):</strong> Construcción compleja del pedido con validaciones</li>
-    <li><strong>🔌 Adapter (Eestructural):</strong> Integración unificada con APIs de proveedores</li>
+    <li><strong>🔌 Adapter (Estructural):</strong> Integración unificada con APIs de proveedores</li>
     <li><strong>📊 Strategy (Comportamental):</strong> Selección inteligente de proveedores</li>
     <li><strong>🔔 Observer (Comportamental):</strong> Sistema de notificaciones automáticas</li>
   </ul>

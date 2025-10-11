@@ -1,17 +1,13 @@
 ﻿from typing import List, Dict, Optional, Any
 from django.db import transaction
 from .models import Product, Order, OrderItem, Shipment, Notification
-
 from .patterns.creacional.builder import OrderBuilder
-
 from .patterns.estructural.adapter import ShippingAdapterFactory
-
 from .patterns.comportamental.strategy import (
     ProviderSelector,
     StandardSelectionStrategy,
     get_strategy_by_name
 )
-
 from .patterns.comportamental.observer import (
     OrderNotificationSubject,
     create_default_observers
@@ -124,6 +120,129 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
     
     return order.id
 
+class OrderService:
+    """Facade para operaciones de pedidos."""
+    
+    def __init__(self, strategy_type: str = 'standard'):
+        self.strategy_type = strategy_type
+    
+ 
+    def create_order_with_patterns(self, customer_email: str, address: str, priority: str, 
+                                   fragility: str, items: Dict[str, int], 
+                                   strategy: str = 'standard') -> Dict[str, Any]:
+        """
+        Crea un pedido usando todos los patrones de diseño.
+        
+        Returns:
+            Diccionario con order_id y detalles del pedido
+        """
+        input_data = {
+            'customer_email': customer_email,
+            'address': address,
+            'priority': priority,
+            'fragility': fragility,
+            'items': items
+        }
+        
+        order_id = handle_create_order(input_data, strategy)
+        
+        # Obtener información de patrones aplicados
+        order_info = self.get_order_info(order_id)
+        
+        return {
+            'order_id': order_id,
+            'success': True,
+            'patterns_used': order_info['patterns_used']
+        }
+    
+    def get_order_info(self, order_id: int) -> Dict[str, Any]:
+        """Obtiene información del pedido con detalles de patrones aplicados."""
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            notifications = Notification.objects.filter(order_id=order_id)
+            
+            return {
+                'order_id': order.id,
+                'customer_email': order.customer_email,
+                'provider': shipment.provider if shipment else None,
+                'tracking_id': shipment.tracking_id if shipment else None,
+                'patterns_used': {
+                    'builder': f'Pedido PKG-{order.id:08X} construido con peso {order.total_weight}g',
+                    'strategy': f'Proveedor {shipment.provider if shipment else "N/A"} seleccionado',
+                    'adapter': f'Tracking {shipment.tracking_id if shipment else "N/A"} generado',
+                    'observer': f'{notifications.count()} notificaciones enviadas'
+                }
+            }
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')
+    
+    def get_order_status(self, order_id: int) -> Dict[str, Any]:
+        """Obtiene el estado actual del pedido."""
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            
+            return {
+                'order_id': order.id,
+                'status': shipment.status if shipment else 'PENDING',
+                'tracking_id': shipment.tracking_id if shipment else None,
+                'provider': shipment.provider if shipment else None
+            }
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')
+    
+    def simulate_status_change(self, order_id: int, new_status: str) -> list:
+        """
+        Simula cambio de estado y dispara notificaciones (patrón Observer).
+        
+        Args:
+            order_id: ID del pedido
+            new_status: Nuevo estado ('dispatched', 'in_transit', 'delivered')
+        
+        Returns:
+            Lista de notificaciones enviadas
+        """
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            
+            if not shipment:
+                raise ValueError('No se encontró envío para este pedido')
+            
+            # Actualizar estado
+            shipment.status = new_status.upper()
+            shipment.save()
+            
+            # Disparar notificaciones con Observer
+            subject = OrderNotificationSubject()
+            observers = create_default_observers()
+            
+            for observer in observers:
+                subject.attach(observer)
+            
+            notification_data = {
+                'order_id': order.id,
+                'order_code': f'PKG-{order.id:08X}',
+                'customer_email': order.customer_email,
+                'tracking_code': shipment.tracking_id,
+                'provider_name': shipment.provider,
+                'weight': order.total_weight,
+                'priority': order.priority,
+                'fragility': order.fragility,
+                'status': new_status,
+                'pickup_date': str(order.created_at)
+            }
+            
+            subject.notify(notification_data)
+            
+            # Retornar lista de canales notificados
+            return [obs.get_observer_name() for obs in observers]
+            
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')
+
+
 def get_order_processing_info(order_id: int) -> Dict[str, Any]:
     """
     Obtiene información detallada sobre los patrones aplicados en un pedido.
@@ -188,35 +307,3 @@ def get_order_processing_info(order_id: int) -> Dict[str, Any]:
         
     except Order.DoesNotExist:
         raise ValueError(f'Pedido #{order_id} no encontrado')
-class OrderService:
-    """Facade para operaciones de pedidos."""
-    
-    def __init__(self, strategy_type: str = 'standard'):
-        self.strategy_type = strategy_type
-    
-    def create_order(self, customer_email: str, address: str, priority: str, 
-                    fragility: str, items: Dict[str, int]) -> Dict[str, Any]:
-        """Crea un pedido completo."""
-        input_data = {
-            'customer_email': customer_email,
-            'address': address,
-            'priority': priority,
-            'fragility': fragility,
-            'items': items
-        }
-        order_id = handle_create_order(input_data, self.strategy_type)
-        return self.get_order_info(order_id)
-    
-    def get_order_info(self, order_id: int) -> Dict[str, Any]:
-        """Obtiene información del pedido."""
-        try:
-            order = Order.objects.get(id=order_id)
-            shipment = Shipment.objects.filter(order_id=order_id).first()
-            return {
-                'order_id': order.id,
-                'customer_email': order.customer_email,
-                'provider': shipment.provider if shipment else None,
-                'tracking_id': shipment.tracking_id if shipment else None
-            }
-        except Order.DoesNotExist:
-            raise ValueError(f'Pedido #{order_id} no encontrado')

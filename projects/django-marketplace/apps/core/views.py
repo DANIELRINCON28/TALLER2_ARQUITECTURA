@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import Http404, JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from .services import (
     products_all, 
     orders_latest, 
@@ -96,18 +96,18 @@ def order_create_view(request):
                 
                 # Mensaje de éxito con información de patrones
                 success_msg = (
-                    f"✅ Pedido #{order_result['order_id']} creado exitosamente con patrones de diseño!\n"
-                    f"🔨 Builder: {order_result['patterns_used']['builder']}\n"
-                    f"📊 Strategy: {order_result['patterns_used']['strategy']}\n"
-                    f"🔌 Adapter: {order_result['patterns_used']['adapter']}\n"
-                    f"🔔 Observer: {order_result['patterns_used']['observer']}"
+                    f"Pedido #{order_result['order_id']} creado exitosamente con patrones de diseño!\n"
+                    f"Builder: {order_result['patterns_used']['builder']}\n"
+                    f"Strategy: {order_result['patterns_used']['strategy']}\n"
+                    f"Adapter: {order_result['patterns_used']['adapter']}\n"
+                    f"Observer: {order_result['patterns_used']['observer']}"
                 )
                 messages.success(request, success_msg)
                 
                 return redirect('order_show', order_id=order_result['order_id'])
                 
             except Exception as e:
-                messages.error(request, f"❌ Error al crear pedido: {str(e)}")
+                messages.error(request, f"Error al crear pedido: {str(e)}")
                 # Continúa ejecutando el GET para mostrar el formulario nuevamente
     
     # Mostrar formulario (GET) - equivalente a: $products = products_all();
@@ -156,6 +156,8 @@ def order_show_view(request, order_id):
     return render(request, 'orders/order_show.html', context)
 
 
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
 def order_status_api(request, order_id):
     """
     API para obtener estado del pedido en tiempo real.

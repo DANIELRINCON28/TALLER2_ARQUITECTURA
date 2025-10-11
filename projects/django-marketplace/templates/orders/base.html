@@ -1,51 +1,35 @@
-<!-- 
-  Template base para la aplicación Django.
-  Traducción directa de layout.php manteniendo la misma estructura HTML y funcionalidad.
-  Incluye el sistema de mensajes flash equivalente a $_SESSION['flash'] en PHP.
--->
 {% load static %}
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>MercadoBarrio • Con Patrones de Diseño</title>
+  <title>MercadoBarrio - Patrones de Diseño</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 <header class="topbar">
   <div class="container">
-    <!-- Equivalente a: <a class="brand" href="?r=home">🛒 MercadoBarrio</a> -->
-    <a class="brand" href="{% url 'home' %}">🛒 MercadoBarrio</a>
+    <a class="brand" href="{% url 'home' %}">MercadoBarrio</a>
     <nav class="nav">
-      <!-- Equivalente a: <a class="btn" href="?r=order/create">Confirmar pedido</a> -->
       <a class="btn" href="{% url 'order_create' %}">Confirmar pedido</a>
     </nav>
   </div>
 </header>
 <main class="container">
-  <!-- 
-    Sistema de mensajes Django equivalente al sistema de flash en PHP:
-    $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']); 
-  -->
   {% if messages %}
     {% for message in messages %}
       <div class="alert {{ message.tags }}">{{ message }}</div>
     {% endfor %}
   {% endif %}
   
-  <!-- 
-    Equivalente a: <section class="card"><?php include __DIR__ . '/' . $name . '.php'; ?></section>
-    En Django se usa block content para el contenido específico de cada página
-  -->
   <section class="card">
     {% block content %}
     {% endblock %}
   </section>
   
-  <!-- Equivalente al footer en layout.php -->
   <footer class="muted center mt">
-    <small>🎯 Sistema refactorizado con patrones de diseño • Builder, Adapter, Strategy y Observer implementados</small>
+    <small>Sistema con patrones de diseño: Builder, Adapter, Strategy y Observer</small>
   </footer>
 </main>
 </body>

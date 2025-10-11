@@ -124,6 +124,19 @@ class OrderBuilder:
         # Generar atributos del paquete
         self._generate_package_attributes()
         
+        # Guardar resumen antes de crear la orden
+        self._last_summary = {
+            'customer_email': self._customer_email,
+            'address': self._address,
+            'priority': self._priority,
+            'fragility': self._fragility,
+            'total_weight': self._total_weight,
+            'items_count': len(self._resolved_items),
+            'package_code': self._package_code,
+            'handling_label': self._handling_label,
+            'estimated_pickup_date': self._estimated_pickup_date.isoformat() if self._estimated_pickup_date else None
+        }
+        
         # Crear pedido en la base de datos
         with transaction.atomic():
             order = Order.objects.create(
@@ -149,7 +162,14 @@ class OrderBuilder:
             return current_order
     
     def get_order_summary(self) -> Dict[str, Any]:
-
+        """
+        Retorna un resumen del pedido construido.
+        Debe llamarse despues de build() para obtener el resumen guardado.
+        """
+        if hasattr(self, '_last_summary') and self._last_summary:
+            return self._last_summary
+            
+        # Fallback: generar resumen actual si no hay resumen guardado
         if not hasattr(self, '_package_code') or not self._package_code:
             self._generate_package_attributes()
             
@@ -159,7 +179,7 @@ class OrderBuilder:
             'priority': self._priority,
             'fragility': self._fragility,
             'total_weight': self._total_weight,
-            'items_count': len(self._resolved_items),
+            'items_count': len(self._resolved_items) if self._resolved_items else 0,
             'package_code': self._package_code,
             'handling_label': self._handling_label,
             'estimated_pickup_date': self._estimated_pickup_date.isoformat() if self._estimated_pickup_date else None
