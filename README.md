@@ -143,9 +143,9 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 4. Poblar datos de prueba
-```bash
-python manage.py poblar_datos
+### 4. Restaurar base de datos
+```
+Dado que la base de datos fue trabajada en PostgresSQL, es requerido usar el motor de postgres y restablecer la BD desde el archivo Backup_BD.sql
 ```
 
 ### 5. Ejecutar servidor
@@ -158,3 +158,4 @@ python ejecucion_patrones.py
 ```
 
 Acceder a: `http://localhost:8000`
+
