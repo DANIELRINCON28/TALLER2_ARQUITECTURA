@@ -1,6 +1,6 @@
 <?php
 // Estado del proyecto hasta el requerimiento: lógica directa sin patrones de diseño.
-// NOTA: el objetivo del taller es refactorizar este código para introducir patrones (creacional, estructural, comportamiento).
+// NOTA: el objetivo del taller es refactorizar este código para introducir patrones (creacional, eestructural, comportamiento).
 
 function products_all(): array {
   return db()->query("SELECT * FROM products ORDER BY name ASC")->fetchAll();

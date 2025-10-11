@@ -1,5 +1,5 @@
 # Starter PHP + MySQL (sin patrones) — MercadoBarrio
-Este es el **estado del proyecto justo antes del requerimiento**. No hay patrones implementados. La lógica es directa y está lista para **refactorizar** aplicando: 1 creacional, 1 estructural y 1 de comportamiento.
+Este es el **estado del proyecto justo antes del requerimiento**. No hay patrones implementados. La lógica es directa y está lista para **refactorizar** aplicando: 1 creacional, 1 eestructural y 1 de comportamiento.
 
 ## Requisitos
 - XAMPP (PHP 8+, MySQL) — Ajusta `config.php` si es necesario.
@@ -26,7 +26,7 @@ Este es el **estado del proyecto justo antes del requerimiento**. No hay patrone
 ## Tarea (para estudiantes)
 - Refactorizar introduciendo:
   - **1 patrón creacional** (p. ej., Builder para construir el pedido),
-  - **1 patrón estructural** (p. ej., Adapter para unificar proveedores),
+  - **1 patrón eestructural** (p. ej., Adapter para unificar proveedores),
   - **1 patrón de comportamiento** (p. ej., Strategy para elección de proveedor u Observer para notificaciones).
 - Dejar comentarios `// [Patrón: ...]` donde lo apliquen y explicar en el README (breve).
 

@@ -1,10 +1,3 @@
-"""
-Patrón Creacional: Builder
-Responsabilidad: Construcción compleja de pedidos con validaciones y cálculos.
-
-El patrón Builder separa la construcción de un objeto complejo de su representación,
-permitiendo el mismo proceso de construcción para crear diferentes representaciones.
-"""
 import secrets
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
@@ -44,18 +37,7 @@ class OrderBuilder:
         self._estimated_pickup_date = None
     
     def with_customer(self, email: str) -> 'OrderBuilder':
-        """
-        Establece el email del cliente con validación.
-        
-        Args:
-            email: Email del cliente
-            
-        Returns:
-            Self para method chaining
-            
-        Raises:
-            ValueError: Si el email no es válido
-        """
+
         email = email.strip()
         try:
             validate_email(email)
@@ -65,18 +47,7 @@ class OrderBuilder:
             raise ValueError('Email inválido')
     
     def with_address(self, address: str) -> 'OrderBuilder':
-        """
-        Establece la dirección de entrega con validación.
-        
-        Args:
-            address: Dirección de entrega
-            
-        Returns:
-            Self para method chaining
-            
-        Raises:
-            ValueError: Si la dirección está vacía
-        """
+
         address = address.strip()
         if not address:
             raise ValueError('Dirección requerida')
@@ -84,54 +55,24 @@ class OrderBuilder:
         return self
     
     def with_priority(self, priority: str) -> 'OrderBuilder':
-        """
-        Establece la prioridad del pedido.
-        
-        Args:
-            priority: 'normal' o 'express'
-            
-        Returns:
-            Self para method chaining
-        """
+
         self._priority = priority if priority in ['normal', 'express'] else 'normal'
         return self
     
     def with_fragility(self, fragility: str) -> 'OrderBuilder':
-        """
-        Establece el nivel de fragilidad del pedido.
-        
-        Args:
-            fragility: 'ninguna', 'debil' o 'alta'
-            
-        Returns:
-            Self para method chaining
-        """
+
         valid_options = ['ninguna', 'debil', 'alta']
         self._fragility = fragility if fragility in valid_options else 'ninguna'
         return self
     
     def with_items(self, items: Dict[str, int]) -> 'OrderBuilder':
-        """
-        Añade items al pedido y resuelve productos con cálculo de peso.
-        
-        Args:
-            items: Diccionario {product_id: quantity}
-            
-        Returns:
-            Self para method chaining
-            
-        Raises:
-            ValueError: Si no hay items válidos
-        """
+
         self._items = items
         self._resolve_items()
         return self
     
     def _resolve_items(self):
-        """
-        Resuelve los items del pedido validando productos y calculando peso total.
-        Lógica de negocio: validación de existencia de productos y cálculo de peso.
-        """
+
         self._total_weight = 0
         self._resolved_items = []
         
@@ -154,13 +95,7 @@ class OrderBuilder:
             raise ValueError('El pedido no tiene items válidos')
     
     def _generate_package_attributes(self):
-        """
-        Genera atributos adicionales del paquete según los requisitos:
-        - codigoPaquete: código único generado
-        - pesoEstimado: peso calculado 
-        - etiquetaManejo: etiqueta según fragilidad
-        - fechaRecogidaEstimada: fecha estimada de recogida
-        """
+
         # Generar código único del paquete
         self._package_code = f"PKG-{secrets.token_hex(6).upper()}"
         
@@ -177,15 +112,7 @@ class OrderBuilder:
         self._estimated_pickup_date = datetime.now() + timedelta(hours=hours_offset)
     
     def build(self) -> Order:
-        """
-        Construye y persiste el pedido con todos sus items.
-        
-        Returns:
-            Instancia del pedido creado
-            
-        Raises:
-            ValueError: Si faltan datos requeridos
-        """
+
         # Validar datos requeridos
         if not self._customer_email:
             raise ValueError('Email del cliente requerido')
@@ -222,12 +149,7 @@ class OrderBuilder:
             return current_order
     
     def get_order_summary(self) -> Dict[str, Any]:
-        """
-        Obtiene un resumen del pedido en construcción para debug/logging.
-        
-        Returns:
-            Diccionario con resumen del pedido
-        """
+
         if not hasattr(self, '_package_code') or not self._package_code:
             self._generate_package_attributes()
             

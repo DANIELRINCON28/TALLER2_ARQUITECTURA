@@ -1,11 +1,3 @@
-"""
-Patrón Comportamental: Observer
-Responsabilidad: Notificar a múltiples suscriptores cuando cambia el estado de un pedido.
-
-El patrón Observer define una dependencia uno-a-muchos entre objetos,
-de modo que cuando un objeto cambia de estado, todos sus dependientes
-son notificados y actualizados automáticamente.
-"""
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 import logging
@@ -53,17 +45,6 @@ class OrderObserver(ABC):
 # ==========================================
 
 class EmailNotificationObserver(OrderObserver):
-    """
-    Observador que envía notificaciones por correo electrónico.
-    
-    En producción, integraría con servicios como:
-    - SendGrid
-    - AWS SES
-    - Mailgun
-    - SMTP personalizado
-    
-    Actualmente simula el envío para demostración.
-    """
     
     def update(self, order_data: Dict[str, Any]) -> None:
         """
@@ -82,12 +63,6 @@ class EmailNotificationObserver(OrderObserver):
         logger.info(f"Tracking: {tracking_code} ({provider_name})")
         logger.debug(f"Contenido: {email_content[:100]}...")
         
-        # En producción:
-        # send_email(
-        #     to=customer_email,
-        #     subject=f"Pedido {order_code} confirmado",
-        #     body=email_content
-        # )
     
     def _generate_email_content(self, order_data: Dict[str, Any]) -> str:
         """

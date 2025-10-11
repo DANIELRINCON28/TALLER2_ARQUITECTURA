@@ -18,7 +18,7 @@ $flash = $_SESSION['flash'] ?? null; unset($_SESSION['flash']);
 <main class="container">
   <?php if ($flash): ?><div class="alert <?= htmlspecialchars($flash['type']) ?>"><?= htmlspecialchars($flash['msg']) ?></div><?php endif; ?>
   <section class="card"><?php include __DIR__ . '/' . $name . '.php'; ?></section>
-  <footer class="muted center mt"><small>Starter sin patrones • Lista para refactorizar (creacional, estructural y comportamiento)</small></footer>
+  <footer class="muted center mt"><small>Starter sin patrones • Lista para refactorizar (creacional, eestructural y comportamiento)</small></footer>
 </main>
 </body>
 </html>

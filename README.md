@@ -65,13 +65,13 @@ TALLER2_ARQUITECTURA/
 │       │       └── patterns/         # 🎨 PATRONES DE DISEÑO
 │       │           ├── __init__.py
 │       │           ├── README.md     # Guía de uso
-│       │           ├── creational/   # Patrones de Creación
+│       │           ├── creacional/   # Patrones de Creación
 │       │           │   ├── __init__.py
 │       │           │   └── builder.py  # OrderBuilder (231 líneas)
-│       │           ├── structural/   # Patrones Estructurales
+│       │           ├── estructural/   # Patrones Eestructurales
 │       │           │   ├── __init__.py
 │       │           │   └── adapter.py  # Adapters + Factory (280 líneas)
-│       │           └── behavioral/   # Patrones de Comportamiento
+│       │           └── comportamental/   # Patrones de Comportamiento
 │       │               ├── __init__.py
 │       │               ├── strategy.py # Estrategias (340 líneas)
 │       │               └── observer.py # Observadores (310 líneas)
@@ -117,25 +117,25 @@ TALLER2_ARQUITECTURA/
 ### Patrones de Diseño Implementados (`apps/core/patterns/`)
 
 #### 🔨 Builder (Creacional)
-- **Archivo**: `patterns/creational/builder.py`
+- **Archivo**: `patterns/creacional/builder.py`
 - **Responsabilidad**: Construcción compleja de pedidos con validaciones
 - **Clase Principal**: `OrderBuilder`
 - **Features**: Validación de datos, cálculo de pesos, generación de códigos
 
-#### 🔌 Adapter (Estructural)
-- **Archivo**: `patterns/structural/adapter.py`
+#### 🔌 Adapter (Eestructural)
+- **Archivo**: `patterns/estructural/adapter.py`
 - **Responsabilidad**: Unificar APIs heterogéneas de proveedores de envío
 - **Proveedores**: MotoYA, EcoBike, PaqueteríaZ
 - **Features**: Interfaz común, Factory pattern, extensibilidad
 
 #### 📊 Strategy (Comportamental)
-- **Archivo**: `patterns/behavioral/strategy.py`
+- **Archivo**: `patterns/comportamental/strategy.py`
 - **Responsabilidad**: Algoritmos intercambiables de selección de proveedor
 - **Estrategias**: Standard, EcoFriendly, CostOptimized, WeightBased
 - **Features**: Cambio dinámico, fácil extensión
 
 #### 🔔 Observer (Comportamental)
-- **Archivo**: `patterns/behavioral/observer.py`
+- **Archivo**: `patterns/comportamental/observer.py`
 - **Responsabilidad**: Notificaciones multi-canal automáticas
 - **Observadores**: Email, Webhook, SMS, Logging
 - **Features**: Desacoplamiento, notificación automática

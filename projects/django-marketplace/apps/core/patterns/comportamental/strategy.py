@@ -1,11 +1,3 @@
-"""
-Patrón Comportamental: Strategy
-Responsabilidad: Encapsular algoritmos de selección de proveedor de envío.
-
-El patrón Strategy define una familia de algoritmos, encapsula cada uno
-y los hace intercambiables. Strategy permite que el algoritmo varíe
-independientemente de los clientes que lo usan.
-"""
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
 
@@ -59,26 +51,13 @@ class ProviderSelectionStrategy(ABC):
 # ==========================================
 
 class StandardSelectionStrategy(ProviderSelectionStrategy):
-    """
-    Estrategia estándar de selección basada en reglas predefinidas.
-    
-    Algoritmo:
-    1. Si el pedido es frágil y no tiene prioridad urgente → EcoBike (cuidadoso)
-    2. Si el peso es > 5kg → PaqueteríaZ (capacidad)
-    3. Si la prioridad es urgente → MotoYA (velocidad)
-    4. Por defecto → MotoYA
-    
-    Esta es la estrategia por defecto del sistema.
-    """
     
     def select_provider(
         self,
         order_data: Dict[str, Any],
         available_providers: List[str]
     ) -> str:
-        """
-        Selecciona proveedor usando reglas de negocio estándar.
-        """
+
         weight = order_data.get('weight', 0)
         fragility = order_data.get('fragility', 'ninguna')
         priority = order_data.get('priority', 'normal')
@@ -107,25 +86,13 @@ class StandardSelectionStrategy(ProviderSelectionStrategy):
 
 
 class EcoFriendlySelectionStrategy(ProviderSelectionStrategy):
-    """
-    Estrategia ecológica que prioriza proveedores sostenibles.
-    
-    Algoritmo:
-    1. Prioridad máxima a EcoBike (bicicletas, cero emisiones)
-    2. Solo usa otros proveedores si EcoBike no puede manejar el pedido
-       (ej: peso > 10kg o urgencia extrema)
-    
-    Ideal para empresas con compromiso ambiental.
-    """
     
     def select_provider(
         self,
         order_data: Dict[str, Any],
         available_providers: List[str]
     ) -> str:
-        """
-        Selecciona proveedor priorizando sostenibilidad.
-        """
+
         weight = order_data.get('weight', 0)
         priority = order_data.get('priority', 'normal')
         
@@ -148,17 +115,7 @@ class EcoFriendlySelectionStrategy(ProviderSelectionStrategy):
 
 
 class CostOptimizedSelectionStrategy(ProviderSelectionStrategy):
-    """
-    Estrategia optimizada para minimizar costos de envío.
-    
-    Algoritmo:
-    1. PaqueteríaZ para paquetes pesados (escala de precios)
-    2. EcoBike para paquetes ligeros (tarifa plana económica)
-    3. MotoYA solo para urgencias (premium pricing)
-    
-    Ideal para empresas enfocadas en margen de ganancia.
-    """
-    
+
     # Costos estimados por proveedor (simulados)
     COST_STRUCTURE = {
         'paqz': {'base': 50, 'per_kg': 10},      # Económico para peso
@@ -199,16 +156,6 @@ class CostOptimizedSelectionStrategy(ProviderSelectionStrategy):
 
 
 class WeightBasedSelectionStrategy(ProviderSelectionStrategy):
-    """
-    Estrategia simple basada únicamente en el peso del paquete.
-    
-    Algoritmo:
-    - Peso < 2kg → EcoBike
-    - Peso 2-8kg → MotoYA
-    - Peso > 8kg → PaqueteríaZ
-    
-    Útil para casos donde el peso es el factor determinante principal.
-    """
     
     def select_provider(
         self,
@@ -239,17 +186,6 @@ class WeightBasedSelectionStrategy(ProviderSelectionStrategy):
 # ==========================================
 
 class ProviderSelector:
-    """
-    Contexto que usa una estrategia de selección.
-    
-    Esta clase es el punto de entrada para seleccionar proveedores.
-    Mantiene una referencia a una estrategia y delega la selección a ella.
-    
-    Ventajas:
-    - Desacopla el código cliente de las estrategias específicas
-    - Permite cambiar estrategias dinámicamente
-    - Proporciona una interfaz consistente independiente de la estrategia
-    """
     
     def __init__(self, strategy: Optional[ProviderSelectionStrategy] = None):
         """

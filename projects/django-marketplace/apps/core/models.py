@@ -36,7 +36,6 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} ({self.weight_grams}g)"
 
-
 class Order(models.Model):
     """
     Modelo de pedidos.
@@ -79,7 +78,6 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.customer_email}"
-
 
 class OrderItem(models.Model):
     """

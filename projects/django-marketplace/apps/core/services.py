@@ -1,26 +1,18 @@
-﻿"""
-Funciones de negocio para la aplicación de pedidos.
-
-ARQUITECTURA LIMPIA CON PATRONES DE DISEÑO:
-Este módulo orquesta la lógica de negocio usando patrones extraídos a módulos separados.
-
-Patrones implementados:
-- CREACIONAL: Builder (patterns/creational/builder.py)
-- ESTRUCTURAL: Adapter (patterns/structural/adapter.py)
-- COMPORTAMENTAL: Strategy + Observer (patterns/behavioral/)
-"""
-
-from typing import List, Dict, Optional, Any
+﻿from typing import List, Dict, Optional, Any
 from django.db import transaction
 from .models import Product, Order, OrderItem, Shipment, Notification
-from .patterns.creational.builder import OrderBuilder
-from .patterns.structural.adapter import ShippingAdapterFactory
-from .patterns.behavioral.strategy import (
+
+from .patterns.creacional.builder import OrderBuilder
+
+from .patterns.estructural.adapter import ShippingAdapterFactory
+
+from .patterns.comportamental.strategy import (
     ProviderSelector,
     StandardSelectionStrategy,
     get_strategy_by_name
 )
-from .patterns.behavioral.observer import (
+
+from .patterns.comportamental.observer import (
     OrderNotificationSubject,
     create_default_observers
 )
@@ -132,40 +124,6 @@ def handle_create_order(input_data: Dict[str, Any], strategy_type: str = 'standa
     
     return order.id
 
-class OrderService:
-    """Facade para operaciones de pedidos."""
-    
-    def __init__(self, strategy_type: str = 'standard'):
-        self.strategy_type = strategy_type
-    
-    def create_order(self, customer_email: str, address: str, priority: str, 
-                    fragility: str, items: Dict[str, int]) -> Dict[str, Any]:
-        """Crea un pedido completo."""
-        input_data = {
-            'customer_email': customer_email,
-            'address': address,
-            'priority': priority,
-            'fragility': fragility,
-            'items': items
-        }
-        order_id = handle_create_order(input_data, self.strategy_type)
-        return self.get_order_info(order_id)
-    
-    def get_order_info(self, order_id: int) -> Dict[str, Any]:
-        """Obtiene información del pedido."""
-        try:
-            order = Order.objects.get(id=order_id)
-            shipment = Shipment.objects.filter(order_id=order_id).first()
-            return {
-                'order_id': order.id,
-                'customer_email': order.customer_email,
-                'provider': shipment.provider if shipment else None,
-                'tracking_id': shipment.tracking_id if shipment else None
-            }
-        except Order.DoesNotExist:
-            raise ValueError(f'Pedido #{order_id} no encontrado')
-
-
 def get_order_processing_info(order_id: int) -> Dict[str, Any]:
     """
     Obtiene información detallada sobre los patrones aplicados en un pedido.
@@ -203,7 +161,7 @@ def get_order_processing_info(order_id: int) -> Dict[str, Any]:
                     }
                 },
                 'adapter': {
-                    'name': 'Adapter (Estructural)',
+                    'name': 'Adapter (Eestructural)',
                     'purpose': 'Integración uniforme con APIs',
                     'evidence': {
                         'provider_integrated': shipment.provider if shipment else 'N/A',
@@ -230,3 +188,35 @@ def get_order_processing_info(order_id: int) -> Dict[str, Any]:
         
     except Order.DoesNotExist:
         raise ValueError(f'Pedido #{order_id} no encontrado')
+class OrderService:
+    """Facade para operaciones de pedidos."""
+    
+    def __init__(self, strategy_type: str = 'standard'):
+        self.strategy_type = strategy_type
+    
+    def create_order(self, customer_email: str, address: str, priority: str, 
+                    fragility: str, items: Dict[str, int]) -> Dict[str, Any]:
+        """Crea un pedido completo."""
+        input_data = {
+            'customer_email': customer_email,
+            'address': address,
+            'priority': priority,
+            'fragility': fragility,
+            'items': items
+        }
+        order_id = handle_create_order(input_data, self.strategy_type)
+        return self.get_order_info(order_id)
+    
+    def get_order_info(self, order_id: int) -> Dict[str, Any]:
+        """Obtiene información del pedido."""
+        try:
+            order = Order.objects.get(id=order_id)
+            shipment = Shipment.objects.filter(order_id=order_id).first()
+            return {
+                'order_id': order.id,
+                'customer_email': order.customer_email,
+                'provider': shipment.provider if shipment else None,
+                'tracking_id': shipment.tracking_id if shipment else None
+            }
+        except Order.DoesNotExist:
+            raise ValueError(f'Pedido #{order_id} no encontrado')

@@ -2,25 +2,25 @@
 Paquete de patrones de diseño del sistema.
 
 Este paquete organiza los patrones de diseño en tres categorías:
-- creational: Patrones de creación (Builder)
-- structural: Patrones estructurales (Adapter)
-- behavioral: Patrones de comportamiento (Strategy, Observer)
+- creacional: Patrones de creación (Builder)
+- estructural: Patrones eestructurales (Adapter)
+- comportamental: Patrones de comportamiento (Strategy, Observer)
 """
 
 # Imports facilitados para uso externo
-from .creational.builder import OrderBuilder
-from .structural.adapter import (
+from .creacional.builder import OrderBuilder
+from .estructural.adapter import (
     ShippingProvider,
     ShippingAdapterFactory
 )
-from .behavioral.strategy import (
+from .comportamental.strategy import (
     ProviderSelector,
     StandardSelectionStrategy,
     EcoFriendlySelectionStrategy,
     CostOptimizedSelectionStrategy,
     get_strategy_by_name
 )
-from .behavioral.observer import (
+from .comportamental.observer import (
     OrderNotificationSubject,
     EmailNotificationObserver,
     WebhookNotificationObserver,

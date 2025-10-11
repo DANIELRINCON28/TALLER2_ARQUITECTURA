@@ -4,7 +4,7 @@ Integra Builder, Adapter, Strategy y Observer según las directrices del proyect
 
 Patrones implementados:
 - CREACIONAL: Builder - Para construcción compleja de pedidos
-- ESTRUCTURAL: Adapter - Para integración con proveedores de entrega
+- Eestructural: Adapter - Para integración con proveedores de entrega
 - COMPORTAMENTAL: Strategy - Para selección inteligente de proveedores
 - COMPORTAMENTAL: Observer - Para sistema de notificaciones multi-canal
 """

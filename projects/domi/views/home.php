@@ -1,6 +1,6 @@
 <?php /** @var array $products */ /** @var array $recent */ ?>
 <h1 class="h">Módulo de Pedidos & Entregas (Starter)</h1>
-<p class="muted">Código base **sin patrones de diseño**. La tarea es refactorizar aplicando uno creacional, uno estructural y uno de comportamiento.</p>
+<p class="muted">Código base **sin patrones de diseño**. La tarea es refactorizar aplicando uno creacional, uno eestructural y uno de comportamiento.</p>
 
 <h2 class="hh">Productos</h2>
 <ul class="list">

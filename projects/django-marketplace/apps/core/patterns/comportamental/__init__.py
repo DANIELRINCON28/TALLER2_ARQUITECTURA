@@ -1,5 +1,5 @@
 """
-Patrones de comportamiento (Behavioral Patterns).
+Patrones de comportamiento (comportamental Patterns).
 
 Estos patrones se enfocan en la comunicación entre objetos,
 cómo los objetos interactúan y distribuyen responsabilidades.
